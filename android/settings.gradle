@@ -1,0 +1,3 @@
+rootProject.name = 'charm_city_readers'
+
+include ':app'

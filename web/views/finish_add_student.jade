@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    block head
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      title
+        block title
+          | Reading Challenge
+
+      block styles
+        link(rel='stylesheet', href='vendor/stylesheets/bootstrap/bootstrap.min.css')
+
+  body
+    block body
+      block header
+      block content
+        .container.container-fluid
+          h1 Finish Adding Student
+          p To finish adding student, please follow the following instructions:
+          ol
+            li Click 
+              a(href='/logout_student', target="_blank" ) here
+              span  to complete adding your student, then close the pop up.
+            li 
+              ul
+                li If you're on a web browser, click 
+                  a(class='button', href='/') here to return Home 
+                li If you're on the Android app, return to your app and click "Home" to see updates.
+
+    block footer
+    script(type='text/javascript').
+      Bootstrap = JSON.parse(decodeURIComponent("!{encodeURIComponent(JSON.stringify(bootstrap || {}))}"));
+    block scripts

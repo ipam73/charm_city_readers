@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    block head
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      title
+        block title
+          | Reading Challenge
+
+      block styles
+        link(rel='stylesheet', href='vendor/stylesheets/bootstrap/bootstrap.min.css')
+        link(rel='stylesheet', href='vendor/stylesheets/toastr/toastr.min.css')
+
+  body
+    block body
+      block header
+      block content
+
+    block footer
+    script(type='text/javascript').
+      Bootstrap = JSON.parse(decodeURIComponent("!{encodeURIComponent(JSON.stringify(bootstrap || {}))}"));
+    block scripts
