@@ -9,6 +9,17 @@ var moment = require("moment");
 // Downgrading to firebase 2.4, since newsest version does not work w/react
 // see:  https://medium.com/@Pier/firebase-is-broken-for-react-native-7f78b7a066da#.gotw818vu
 // and PR: https://github.com/ipam73/reading-challenge/commit/35247388d6ccc29a8dfd2bb1768da3e13a2c07df
+import * as firebase from 'firebase';
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
+    authDomain: "reading-challenge.firebaseapp.com",
+    databaseURL: "https://reading-challenge.firebaseio.com",
+    storageBucket: "firebase-reading-challenge.appspot.com",
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+var firebaseRef = firebaseApp.database().ref();
+
 // var firebase = require('firebase')
 // var config = {
 //     apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
@@ -17,21 +28,21 @@ var moment = require("moment");
 //     storageBucket: "firebase-reading-challenge.appspot.com",
 // };
 // firebase.initializeApp(config);
-// db = firebase.database();
+var db = firebase.database();
 /////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
 // Temporary workaround until Firebase fixes bug
-var Firebase = require('firebase');
-var firebaseURI = "https://reading-challenge.firebaseio.com/";
-var firebaseRef = new Firebase(firebaseURI);
+// var Firebase = require('firebase');
+// var firebaseURI = "https://reading-challenge.firebaseio.com/";
+// var firebaseRef = new Firebase(firebaseURI);
 
-function setFirebaseRef(ref) {
-  return {
-    type: 'FIREBASE_REF_SET',
-    value: ref,
-  };
-}
+// function setFirebaseRef(ref) {
+//   return {
+//     type: 'FIREBASE_REF_SET',
+//     value: ref,
+//   };
+// }
 /////////////////////////////////////////////////////////////
 
 // helper function for ajax calls
@@ -92,14 +103,33 @@ function loginWithPassword(email, password) {
 
 function loginWithPasswordNative(email, password, navigator) {
   return function(dispatch) {
-    (new Firebase(firebaseURI)).authWithPassword({email: email, password:password}).then(function(result) {
-      // console.log("login with email/password complete", result);
-      var user = {
-        displayName: email,
-        uid: result.uid,
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+
+      console.log("login with email/password complete", result);
+      var user = firebase.auth().currentUser;
+
+      var responseUser = {
+        displayName: "",
+        uid: "",
       };
+
+      if (user) {
+        var name = user.displayName;
+        var email = user.email;
+        // var photoUrl = user.photoURL;
+        var uid = user.uid;
+        console.log("got in here!", user);
+        console.log("got:", name, email, uid);
+        responseUser.displayName = email;
+        responseUser.uid = uid;
+        // User is signed in.
+      } else {
+        console.log("did not find user!", result);
+
+        // No user is signed in.
+      }
       // console.log("new user is: ", user);
-      dispatch(loginSuccess(null, user));
+      dispatch(loginSuccess(null, responseUser));
       // console.log("dispatch new student list ", user.uid);
       dispatch(getStudentList(user.uid));
 
@@ -120,7 +150,7 @@ function createUserFailure(err) {
 
 function createUserNative(email, password, navigator) {
   return function(dispatch) {
-    (new Firebase(firebaseURI)).createUser({email: email, password:password}).then(function(result) {
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
       dispatch(loginWithPasswordNative(email, password, navigator));
     }).catch(function(err) {
       dispatch(createUserFailure(err));
@@ -163,6 +193,7 @@ function logout() {
 }
 
 function loginSuccess(token, user) {
+  console.log("*** in login success", user);
   // TODO: ensure that firebase ref for this user exists
   // console.log("go to / on loginSuccess");
   return {
@@ -324,11 +355,12 @@ function setStudentList(students) {
 function getStudentList(parent_id) {
   // console.log("ACTIONS: getStudentList");
   return (dispatch, getState) => {
+    console.log("in get student list");
     ///////////////////////////////////////////////////////////////////////
     // temporarily commenting out until firebase fixes bug, see top of file
-    // var ref = db.ref("/parents/" + parent_id);
-    // console.log("ACTIONS: getStudentList. parent:", parent_id);
-    var ref = new Firebase(firebaseURI + "parents/" + parent_id);
+    var ref = db.ref("/parents/" + parent_id);
+    console.log("ACTIONS: getStudentList. parent:", parent_id);
+    // var ref = new Firebase(firebaseURI + "parents/" + parent_id);
     return ref.child("students").once("value", (snapshot) => {
       dispatch(setStudentList(snapshot.val()));
     });

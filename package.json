@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "apsl-react-native-button": "^3.0.1",
-    "firebase": "^2.4.2",
+    "firebase": "^3.5.2",
     "keymirror": "^0.1.1",
     "moment": "^2.15.2",
     "react": "15.3.2",

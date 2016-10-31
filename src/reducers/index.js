@@ -78,7 +78,7 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.LOGIN_SUCCESS:
-      // console.log("in login success user is: ", action.user);
+      console.log("in login success user is: ", action.user);
       newstate.user = {
         displayName: action.user.displayName,
         uid: action.user.uid,
