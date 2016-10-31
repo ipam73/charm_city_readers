@@ -16,75 +16,6 @@ import moment from 'moment';
 
 const icon = require('../../../images/BuddyPlaceholder.png');
 
-var styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    backgroundColor: '#E0E0E0',
-    paddingTop: 50,
-  },
-  row: {
-    backgroundColor: '#FBFBFB',
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 20,
-  },
-  subRowContainer: {
-    paddingBottom: 10,
-    flexDirection: 'row',
-  },
-  headingIcon: {
-    width: 70,
-    height: 70,
-  },
-  headingText: {
-    paddingLeft: 20,
-    // fontWeight: 'bold',
-    flex: 1,
-  },
-  headingTitle: {
-    // fontWeight: 'bold',
-  },
-  leftCol: {
-    flex: 1,
-  },
-  rightCol: {
-    alignItems: 'flex-end',
-  },
-  date: {
-    flexDirection: 'row',
-  },
-  dateText: {
-    color: 'black',
-    fontSize: 20,
-    paddingBottom: 15,
-  },
-  dateIcon: {
-    color: '#8E44AD',
-  },
-  button: {
-    marginTop: 15,
-    borderColor: 'gray',
-    backgroundColor: 'white',
-    borderRadius: 0,
-    borderWidth: 2,
-    width: 200,
-    height: 30,
-    alignSelf: 'center',
-  },
-  buttonText: {
-    fontSize: 14,
-  },
-  subHeading: {
-    // fontWeight: 'bold',
-    fontSize: 16,
-    paddingBottom: 10,
-  },
-});
-
 class AddTimeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -160,7 +91,7 @@ class AddTimeScreen extends React.Component {
                 </TouchableWithoutFeedback>
                 <Text style={styles.subHeading}>Minutes Read:</Text>
                 <TextInput
-                  style={{height: 50, width: 100, borderColor: 'gray', borderWidth: 1, fontSize: 20}}
+                  style={{height: 50, width: 100, fontSize: 20}}
                   keyboardType="numeric"
                   onChangeText={this.onChangeMinsRead}
                   value={this.state.minsRead}
@@ -176,6 +107,75 @@ class AddTimeScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    backgroundColor: '#E0E0E0',
+    paddingTop: 50,
+  },
+  row: {
+    backgroundColor: '#FBFBFB',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+  },
+  subRowContainer: {
+    paddingBottom: 10,
+    flexDirection: 'row',
+  },
+  headingIcon: {
+    width: 70,
+    height: 70,
+  },
+  headingText: {
+    paddingLeft: 20,
+    // fontWeight: 'bold',
+    flex: 1,
+  },
+  headingTitle: {
+    // fontWeight: 'bold',
+  },
+  leftCol: {
+    flex: 1,
+  },
+  rightCol: {
+    alignItems: 'flex-end',
+  },
+  date: {
+    flexDirection: 'row',
+  },
+  dateText: {
+    color: 'black',
+    fontSize: 20,
+    paddingBottom: 15,
+  },
+  dateIcon: {
+    color: '#8E44AD',
+  },
+  button: {
+    marginTop: 15,
+    borderColor: 'gray',
+    backgroundColor: 'white',
+    borderRadius: 0,
+    borderWidth: 2,
+    width: 200,
+    height: 30,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    fontSize: 14,
+  },
+  subHeading: {
+    // fontWeight: 'bold',
+    fontSize: 16,
+    paddingBottom: 10,
+  },
+});
 
 function mapStateToProps(state, props) {
   var parentID = '';

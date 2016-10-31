@@ -10,7 +10,73 @@ import {connect} from 'react-redux';
 import actions from '../../../actions';
 import Button from 'apsl-react-native-button';
 
-var styles = StyleSheet.create({
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    };
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onLoginPress = this.onLoginPress.bind(this);
+    this.onSignUpPress = this.onSignUpPress.bind(this);
+  }
+
+  onSignUpPress() {
+    this.props.createUser(this.state.email, this.state.password, this.props.navigator);
+  }
+
+  onLoginPress() {
+    this.props.loginWithPassword(this.state.email, this.state.password, this.props.navigator);
+  }
+
+  onChangeUsername(text) {
+    this.setState({email: text});
+  }
+
+  onChangePassword(text) {
+    this.setState({password: text});
+  }
+
+  render() {
+    return (
+      <View style={styles.main}>
+        <TouchableHighlight style={styles.row}>
+          <View style={styles.headingContainer}>
+            <View style={styles.subRowContainer}>
+              <View style={styles.headingText}>
+                <Text style={styles.subHeading}>Charm City Readers</Text>
+                <TextInput
+                  placeholder="Email"
+                  onChangeText={this.onChangeUsername}
+                  value={this.state.email}
+                />
+                <TextInput
+                  placeholder="Password"
+                  secureTextEntry
+                  onChangeText={this.onChangePassword}
+                  value={this.state.password}
+                />
+              </View>
+            </View>
+            <View style={styles.buttons}>
+              <Button style={styles.button} textStyle={styles.buttonText} onPress={this.onLoginPress}>
+                Sign In
+              </Button>
+              <Button style={styles.buttonSignUp} textStyle={styles.buttonTextSignUp} onPress={this.onSignUpPress}>
+                Sign Up
+              </Button>
+            </View>
+            <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
   main: {
     flex: 1,
     paddingTop: 50,
@@ -77,73 +143,6 @@ var styles = StyleSheet.create({
   },
 });
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-    };
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onLoginPress = this.onLoginPress.bind(this);
-    this.onSignUpPress = this.onSignUpPress.bind(this);
-  }
-
-  onSignUpPress() {
-    this.props.createUser(this.state.email, this.state.password, this.props.navigator);
-  }
-
-  onLoginPress() {
-    this.props.loginWithPassword(this.state.email, this.state.password, this.props.navigator);
-  }
-
-  onChangeUsername(text) {
-    this.setState({email: text});
-  }
-
-  onChangePassword(text) {
-    this.setState({password: text});
-  }
-
-  render() {
-    return (
-      <View style={styles.main}>
-        <TouchableHighlight style={styles.row}>
-          <View style={styles.headingContainer}>
-            <View style={styles.subRowContainer}>
-              <View style={styles.headingText}>
-                <Text style={styles.subHeading}>Charm City Readers</Text>
-                <TextInput
-                  style={{borderColor: 'gray', borderWidth: 1}}
-                  placeholder="Email"
-                  onChangeText={this.onChangeUsername}
-                  value={this.state.email}
-                />
-                <TextInput
-                  style={{borderColor: 'gray', borderWidth: 1}}
-                  placeholder="Password"
-                  secureTextEntry
-                  onChangeText={this.onChangePassword}
-                  value={this.state.password}
-                />
-              </View>
-            </View>
-            <View style={styles.buttons}>
-              <Button style={styles.button} textStyle={styles.buttonText} onPress={this.onLoginPress}>
-                Sign In
-              </Button>
-              <Button style={styles.buttonSignUp} textStyle={styles.buttonTextSignUp} onPress={this.onSignUpPress}>
-                Sign Up
-              </Button>
-            </View>
-            <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
 
 function mapStateToProps(state) {
   return {
