@@ -11,28 +11,7 @@ const facebookLogin = require('../../images/sign-in-facebook.png');
 const emailLogin = require('../../images/sign-in-with-email.png');
 const googleLogin = require('../../images/sign-in-with-google-small.png');
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  button: {
-    width: 300,
-    height: 60,
-    flex: 1,
-  },
-  buttons: {
-    marginBottom: 60,
-  },
-  backgroundImage: {
-    flex: 1,
-    alignSelf: 'stretch',
-    width: null,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
-});
+
 
 
 class Landingpage extends React.Component {
@@ -73,5 +52,30 @@ class Landingpage extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  button: {
+    width: 300,
+    height: 60,
+    flex: 1,
+  },
+  buttons: {
+    marginBottom: 60,
+  },
+  backgroundImage: {
+    width: undefined,
+    height: undefined,
+    flex: 1,
+    alignSelf: 'stretch',
+    width: null,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+});
 
 module.exports = Landingpage;

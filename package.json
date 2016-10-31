@@ -7,8 +7,18 @@
     "test": "jest"
   },
   "dependencies": {
+    "apsl-react-native-button": "^3.0.1",
+    "firebase": "^2.4.2",
+    "keymirror": "^0.1.1",
+    "moment": "^2.15.2",
     "react": "15.3.2",
-    "react-native": "0.36.0"
+    "react-native": "0.36.0",
+    "react-native-side-menu": "^0.20.1",
+    "react-native-vector-icons": "^3.0.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
+    "underscore": "^1.8.3"
   },
   "jest": {
     "preset": "jest-react-native"

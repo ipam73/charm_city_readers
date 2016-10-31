@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   Text,
-  Component,
 } from 'react-native';
 import {connect} from 'react-redux';
 import actions from '../../../actions';
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class Menu extends Component {
+class Menu extends React.Component {
   static propTypes = {
     onItemSelected: React.PropTypes.func.isRequired,
     navigator: React.PropTypes.object.isRequired,

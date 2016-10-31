@@ -1,9 +1,9 @@
 // library that deals with talking to backend
 var Constants = require('../constants');
-var $ = require("jquery");
+// var $ = require("jquery");
 var _ = require("underscore");
 var moment = require("moment");
-var { push } = require("react-router-redux")
+// var { push } = require("react-router-redux")
 
 /////////////////////////////////////////////////////////
 // Downgrading to firebase 2.4, since newsest version does not work w/react
@@ -63,7 +63,7 @@ function loginWithGoogle() {
       dispatch(loginSuccess(token, user));
       // console.log("dispatching to push /about")
       dispatch(getStudentList(user.uid));
-      dispatch(push("/"));
+      // dispatch(push("/"));
     }).catch(function(err) {
       // console.log("error logging in with google", err);
       dispatch(authFailure(err));
@@ -82,7 +82,7 @@ function loginWithPassword(email, password) {
       };
       dispatch(loginSuccess(null, user));
       dispatch(getStudentList(user.uid));
-      dispatch(push("/"));
+      // dispatch(push("/"));
     }).catch(function(err) {
       // console.log("error logging in with email/password", err);
       dispatch(authFailure(err));
@@ -155,7 +155,7 @@ function logout() {
   return function(dispatch) {
     firebaseRef.unauth().then(() => {
       dispatch(logoutSuccess());
-      dispatch(push("/login"));
+      // dispatch(push("/login"));
     }, (err) => {
       dispatch(authFailure(err));
     });
@@ -215,43 +215,43 @@ function getCsrfHeader() {
 }
 
 // ajax call for new student login
-function _postAddStudent(userID) {
-  return $.ajax({
-    url: `/addstudent?user=${userID}`,
-    dataType: 'jsonp',
-    contentType: 'text/html',
-    method: "GET",
-    headers: { 'Access-Control-Allow-Origin': '*', 'contentType' : 'text/html', 'X-Request': 'JSON'},
-    crossDomain: true,
-    // 'X-Request': 'JSON',
+// function _postAddStudent(userID) {
+//   return $.ajax({
+//     url: `/addstudent?user=${userID}`,
+//     dataType: 'jsonp',
+//     contentType: 'text/html',
+//     method: "GET",
+//     headers: { 'Access-Control-Allow-Origin': '*', 'contentType' : 'text/html', 'X-Request': 'JSON'},
+//     crossDomain: true,
+//     // 'X-Request': 'JSON',
 
-    // xhrFields: {
-    //   // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-    //   // This can be used to set the 'withCredentials' property.
-    //   // Set the value to 'true' if you'd like to pass cookies to the server.
-    //   // If this is enabled, your server must respond with the header
-    //   // 'Access-Control-Allow-Credentials: true'.
-    //   withCredentials: false,
-    // },
-    // datatype: 'jsonp',
-    // 'Accept': 'application/json',
+//     // xhrFields: {
+//     //   // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+//     //   // This can be used to set the 'withCredentials' property.
+//     //   // Set the value to 'true' if you'd like to pass cookies to the server.
+//     //   // If this is enabled, your server must respond with the header
+//     //   // 'Access-Control-Allow-Credentials: true'.
+//     //   withCredentials: false,
+//     // },
+//     // datatype: 'jsonp',
+//     // 'Accept': 'application/json',
 
-  });
-}
+//   });
+// }
 
 
 // ajax call for new student logut
-function _logoutStudent(query) {
-  return $.ajax({
-    url: "/logout",
-    method: "POST",
-    // headers: getCsrfHeader(),
-    headers: { 'Access-Control-Allow-Origin': '*' },
-    crossDomain: true,
-    datatype: 'jsonp',
-    data: query
-  });
-}
+// function _logoutStudent(query) {
+//   return $.ajax({
+//     url: "/logout",
+//     method: "POST",
+//     // headers: getCsrfHeader(),
+//     headers: { 'Access-Control-Allow-Origin': '*' },
+//     crossDomain: true,
+//     datatype: 'jsonp',
+//     data: query
+//   });
+// }
 
 function addStudent(userID) {
   // uses redux-thunk middleware
