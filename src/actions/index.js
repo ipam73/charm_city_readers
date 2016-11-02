@@ -339,18 +339,44 @@ function addStudentFailure() {
   };
 }
 
-function setStudentList(students) {
-  // console.log("ACTIONS setStudentList", students);
-  if (!students) {
-    students = {};
-  }
-  return {
-    type: Constants.GET_STUDENT_LIST,
-    studentList: students //load this in the list in
+function getChallengeEndDate(students) {
+  console.log("in here: getChallengeEndDate");
+  return (dispatch, getState) => {
+    if (!students) {
+      students = {};
+      return dispatch(setStudentList(students, ""));
+    } else {
+      var districtID;
+
+      for (studentID in students) {
+        districtID = students[studentID].district_id;
+        break;
+      }
+
+      // all saved dates are in format YYMMDD
+      var ref = db.ref("/challenges/" + districtID).once("value", (snapshot) => {
+        dispatch(setStudentList(students, snapshot.val()));
+      });
+
+    }
   };
 }
 
-// getStudentList dummy func
+function setStudentList(students, challenges) {
+  if (!students) {
+    students = {};
+  }
+  var challengeEndDate;
+  if (challenges) {
+    challengeEndDate = challenges.curr_end_date;
+  }
+  return {
+    type: Constants.GET_STUDENT_LIST,
+    studentList: students,
+    challengeEndDate,
+  };
+}
+
 // GET ALL THE DATA FOR STUDENTS
 function getStudentList(parent_id) {
   // console.log("ACTIONS: getStudentList");
@@ -362,7 +388,7 @@ function getStudentList(parent_id) {
     console.log("ACTIONS: getStudentList. parent:", parent_id);
     // var ref = new Firebase(firebaseURI + "parents/" + parent_id);
     return ref.child("students").once("value", (snapshot) => {
-      dispatch(setStudentList(snapshot.val()));
+      dispatch(getChallengeEndDate(snapshot.val()));
     });
   };
 }
@@ -392,7 +418,6 @@ function timeFormIsValid(newTime) {
 
 // newTime = {readDate: <string format YYMMDD>, readMinutes: <minutes>}
 function setStudentTime(readDate, readTime, studentID, parentID) {
-  // makes some call to the db to save the new time stats
   var parentsRef = db.ref("/parents/" + parentID);
   var studentsTimeLogRef = parentsRef.child("students/" + studentID + "/time_log");
 

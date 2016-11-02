@@ -78,8 +78,8 @@ class StudentList extends React.Component {
               <Text>Minutes Read</Text>
             </View>
             <View style={styles.rightCol}>
-              <Text style={styles.headings}>{this.props.weeksLeft.toString()}</Text>
-              <Text>Weeks Left</Text>
+              <Text style={styles.headings}>{this.props.daysLeft.toString()}</Text>
+              <Text>Days Left</Text>
             </View>
           </View>
 
@@ -109,13 +109,13 @@ class StudentList extends React.Component {
 StudentList.propTypes = {
   students: React.PropTypes.object.isRequired,
   navigator: React.PropTypes.object.isRequired,
-  weeksLeft: React.PropTypes.number.isRequired,
+  daysLeft: React.PropTypes.number.isRequired,
 };
 
 
 function mapStateToProps(state) {
   return {
-    weeksLeft: state.reducers.weeksLeft,
+    daysLeft: state.reducers.daysLeft,
   };
 }
 

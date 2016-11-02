@@ -2,8 +2,6 @@ var Constants = require("../constants");
 var _ = require("underscore");
 var moment = require("moment");
 
-var END_DATE = moment('2016-08-5');
-
 var initialState = {
   studentList: {},
   timeForm: {},
@@ -11,6 +9,7 @@ var initialState = {
   isAuthenticated: false,
   errorMessage: '',
   weeksLeft: 0,
+  daysLeft: 0,
 };
 
 function getTotalTimeForStudent(student) {
@@ -24,11 +23,12 @@ function getTotalTimeForStudent(student) {
   return total_time;
 }
 
-function calculateWeeksLeft() {
+function calculateDaysLeft(challengeEndDate) {
+  var endDate = moment(challengeEndDate.toString(), "YYMMDD");
   var today = moment(new Date());
-  var duration = moment.duration(END_DATE.diff(today));
-  var weeksLeft = duration.asWeeks();
-  return Math.floor(weeksLeft);
+  var duration = moment.duration(endDate.diff(today));
+  var daysLeft = duration.asDays();
+  return Math.floor(daysLeft);
 }
 
 function rootReducer(state, action) {
@@ -38,7 +38,7 @@ function rootReducer(state, action) {
 
   switch (action.type) {
     case Constants.GET_STUDENT_LIST:
-      newstate.weeksLeft = calculateWeeksLeft();
+      newstate.daysLeft = calculateDaysLeft(action.challengeEndDate);
       newstate.studentList = action.studentList; // whatever is returned from the list
       // not sure if we want to do this here or not
       var studentIDs = Object.keys(newstate.studentList);
