@@ -17,6 +17,7 @@ import Login from './components/login/Login';
 import Support from './components/Support';
 import Welcome from './components/Welcome';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Buddy from './components/buddy/Buddy';
 
 // menu
 const SideMenu = require('react-native-side-menu');
@@ -91,7 +92,7 @@ class AppContainer extends React.Component {
   navigationBarRouteMapper(onToggle) {
     return ({
       LeftButton(route, navigator, index, navState) {
-        if (route.name === 'AddTimeScreen' || route.name === 'Login') {
+        if (route.name === 'AddTimeScreen' || route.name === 'Login' || route.name == 'Buddy') {
           return (
             <TouchableHighlight
               underlayColor="transparent"
@@ -131,6 +132,9 @@ class AppContainer extends React.Component {
         break;
       case 'AddTimeScreen':
         component = AddTimeScreen;
+        break;
+      case 'Buddy':
+        component = Buddy;
         break;
       case 'Homepage':
         component = Homepage;

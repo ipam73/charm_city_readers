@@ -14,7 +14,7 @@ import actions from '../../../actions';
 import Button from 'apsl-react-native-button';
 import moment from 'moment';
 
-const icon = require('../../../images/BuddyPlaceholder.png');
+const icon = require('../../../images/buddy/BuddyPlaceholder.png');
 
 class AddTimeScreen extends React.Component {
   constructor(props) {

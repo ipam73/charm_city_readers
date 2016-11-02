@@ -9,50 +9,7 @@ import {
   Image,
 } from 'react-native';
 import AddTimeButton from '../time/AddTime';
-
-const icon = require('../../../images/BuddyPlaceholder.png');
-
-var styles = StyleSheet.create({
-  row: {
-    backgroundColor: '#FBFBFB',
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 20,
-  },
-  subRowContainer: {
-    paddingBottom: 10,
-    flexDirection: 'row',
-  },
-  headingIcon: {
-    width: 70,
-    height: 70,
-    marginRight: 10,
-  },
-  headingTextContainer: {
-    paddingLeft: 20,
-    color: 'black',
-    flex: 1,
-  },
-  headings: {
-    fontSize: 18,
-    color: 'black',
-  },
-  headingTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: 'black',
-  },
-  leftCol: {
-    flex: 1,
-  },
-  rightCol: {
-    alignItems: 'flex-end',
-  },
-});
+import BuddyButton from '../buddy/BuddyButton';
 
 class StudentList extends React.Component {
   renderRow(student) {
@@ -60,7 +17,10 @@ class StudentList extends React.Component {
       <TouchableHighlight style={styles.row}>
         <View>
           <View style={styles.subRowContainer}>
-            <Image style={styles.headingIcon} source={icon} />
+            <BuddyButton
+              navigator={this.props.navigator}
+              studentID={student.id}
+            />
             <View style={styles.headingTextContaner}>
               <Text style={styles.headingTitle}>{student.name}</Text>
               <Text>
@@ -87,6 +47,7 @@ class StudentList extends React.Component {
             navigator={this.props.navigator}
             studentID={student.id}
           />
+
         </View>
       </TouchableHighlight>
     );
@@ -105,6 +66,44 @@ class StudentList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  row: {
+    backgroundColor: '#FBFBFB',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+  },
+  subRowContainer: {
+    paddingBottom: 10,
+    flexDirection: 'row',
+  },
+  headingTextContainer: {
+    paddingLeft: 20,
+    color: 'black',
+    flex: 1,
+  },
+  headings: {
+    fontSize: 18,
+    color: 'black',
+  },
+  headingTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: 'black',
+  },
+  leftCol: {
+    flex: 1,
+  },
+  rightCol: {
+    alignItems: 'flex-end',
+  },
+});
+
 
 StudentList.propTypes = {
   students: React.PropTypes.object.isRequired,
