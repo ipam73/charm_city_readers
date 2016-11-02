@@ -14,7 +14,20 @@ import actions from '../../../actions';
 import Button from 'apsl-react-native-button';
 import moment from 'moment';
 
-const icon = require('../../../images/buddy/BuddyPlaceholder.png');
+const crabIcon = require('../../../images/buddy/crab.png');
+const dogIcon = require('../../../images/buddy/dog.png');
+const flagIcon = require('../../../images/buddy/flag.png');
+const ravenIcon = require('../../../images/buddy/raven.png');
+const sailboatIcon = require('../../../images/buddy/sailboat.png');
+const placeholder = require('../../../images/buddy/BuddyPlaceholder.png')
+
+const buddyNameToIcon = {
+  crab: crabIcon,
+  dog: dogIcon,
+  flag: flagIcon,
+  raven: ravenIcon,
+  sailboat: sailboatIcon
+}
 
 class AddTimeScreen extends React.Component {
   constructor(props) {
@@ -70,12 +83,17 @@ class AddTimeScreen extends React.Component {
   }
 
   render() {
+    var buddyIcon = placeholder;
+    if (this.props.student && this.props.student.buddy) {
+      buddyIcon = buddyNameToIcon[this.props.student.buddy];
+    }
+
     return (
       <View style={styles.main}>
         <TouchableHighlight style={styles.row}>
           <View style={styles.headingContainer}>
             <View style={styles.subRowContainer}>
-              <Image style={styles.headingIcon} source={icon} />
+              <Image style={styles.headingIcon} source={buddyIcon} />
               <View style={styles.headingText}>
                 <Text style={styles.subHeading}>Date:</Text>
                 <TouchableWithoutFeedback

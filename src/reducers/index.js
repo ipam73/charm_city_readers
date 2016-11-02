@@ -68,6 +68,10 @@ function rootReducer(state, action) {
       newstate.timeForm[action.studentID].timeRead = action.readTime;
       return newstate;
 
+    case Constants.SET_STUDENT_BUDDY:
+      console.log("in here set student buddy");
+      return newstate;
+
     case Constants.TIME_FORM_IS_VALID:
       newstate.timeForm[action.studentID].errors = action.errors;
       newstate.timeForm[action.studentID].formIsValid = action.formIsValid;

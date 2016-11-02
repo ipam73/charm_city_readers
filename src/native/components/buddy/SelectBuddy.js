@@ -13,35 +13,60 @@ import {connect} from 'react-redux';
 import actions from '../../../actions';
 import Button from 'apsl-react-native-button';
 
-class Buddy extends React.Component {
+var crabIcon = require('../../../images/buddy/crab.png');
+var dogIcon = require('../../../images/buddy/dog.png');
+var flagIcon = require('../../../images/buddy/flag.png');
+var ravenIcon = require('../../../images/buddy/raven.png');
+var sailboatIcon = require('../../../images/buddy/sailboat.png');
+
+class SelectBuddy extends React.Component {
   constructor(props) {
     super(props);
+    this.onBuddyPress = this.onBuddyPress.bind(this);
+  }
+
+  onBuddyPress(buddyName) {
+    this.props.setStudentBuddy(buddyName, this.props.studentID, this.props.parentID);
+    this.props.navigator.push({
+      name: 'Homepage',
+      title: 'Charm City Readers',
+    });
   }
 
   render() {
     return (
       <View style={styles.main}>
         <Text style={styles.subHeading}>Change Buddy:</Text>
-        <Image
-          style={styles.buddyButton}
-          source={require('../../../images/buddy/crab.png')}
-        />
-        <Image
-          style={styles.buddyButton}
-          source={require('../../../images/buddy/dog.png')}
-        />
-        <Image
-          style={styles.buddyButton}
-          source={require('../../../images/buddy/flag.png')}
-        />
-        <Image
-          style={styles.buddyButton}
-          source={require('../../../images/buddy/raven.png')}
-        />
-        <Image
-          style={styles.buddyButton}
-          source={require('../../../images/buddy/sailboat.png')}
-        />
+        <TouchableHighlight onPress={() => this.onBuddyPress("crab")}>
+          <Image
+            style={styles.buddyButton}
+            source={crabIcon}
+          />
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.onBuddyPress("dog")}>
+          <Image
+            style={styles.buddyButton}
+            source={dogIcon}
+          />
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.onBuddyPress("flag")}>
+          <Image
+            style={styles.buddyButton}
+            source={flagIcon}
+          />
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.onBuddyPress("raven")}>
+          <Image
+            style={styles.buddyButton}
+            source={ravenIcon}
+          />
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.onBuddyPress("sailboat")}>
+          <Image
+            style={styles.buddyButton}
+            source={sailboatIcon}
+          />
+        </TouchableHighlight>
       </View>
     );
   }
@@ -126,10 +151,10 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setStudentTime: (readDate, readTime, studentID, parentID) => {
-      dispatch(actions.setStudentTime(readDate, readTime, studentID, parentID));
+    setStudentBuddy: (buddy, studentID, parentID) => {
+      dispatch(actions.setStudentBuddy(buddy, studentID, parentID));
     },
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Buddy);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(SelectBuddy);

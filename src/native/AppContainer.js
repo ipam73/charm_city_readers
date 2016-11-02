@@ -17,7 +17,7 @@ import Login from './components/login/Login';
 import Support from './components/Support';
 import Welcome from './components/Welcome';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Buddy from './components/buddy/Buddy';
+import SelectBuddy from './components/buddy/SelectBuddy';
 
 // menu
 const SideMenu = require('react-native-side-menu');
@@ -134,7 +134,7 @@ class AppContainer extends React.Component {
         component = AddTimeScreen;
         break;
       case 'Buddy':
-        component = Buddy;
+        component = SelectBuddy;
         break;
       case 'Homepage':
         component = Homepage;

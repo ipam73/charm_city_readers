@@ -436,6 +436,17 @@ function setStudentTime(readDate, readTime, studentID, parentID) {
   };
 }
 
+function setStudentBuddy(buddyName, studentID, parentID) {
+  console.log("in set student budy", buddyName, studentID, parentID);
+  var parentsRef = db.ref("/parents/" + parentID);
+  var studentsBuddyRef = parentsRef.child("students/" + studentID);
+  studentsBuddyRef.update({"buddy": buddyName});
+  return {
+    type: Constants.SET_STUDENT_BUDDY,
+    studentID,
+  };
+}
+
 function setMinsReadState(event, studentID) {
   var value = event.target.value;
   return {
@@ -448,6 +459,7 @@ function setMinsReadState(event, studentID) {
 module.exports = {
   getStudentList,
   setStudentTime,
+  setStudentBuddy,
   addStudent,
   addStudentFailure,
   addStudentSuccess,

@@ -7,6 +7,21 @@ import {
 import {connect} from 'react-redux';
 import Button from 'apsl-react-native-button';
 
+const crabIcon = require('../../../images/buddy/crab.png');
+const dogIcon = require('../../../images/buddy/dog.png');
+const flagIcon = require('../../../images/buddy/flag.png');
+const ravenIcon = require('../../../images/buddy/raven.png');
+const sailboatIcon = require('../../../images/buddy/sailboat.png');
+const placeholder = require('../../../images/buddy/BuddyPlaceholder.png')
+
+const buddyNameToIcon = {
+  crab: crabIcon,
+  dog: dogIcon,
+  flag: flagIcon,
+  raven: ravenIcon,
+  sailboat: sailboatIcon
+}
+
 class BuddyButton extends React.Component {
   onBuddyPress() {
     this.props.navigator.push({
@@ -19,11 +34,16 @@ class BuddyButton extends React.Component {
   }
 
   render() {
+    var buddyIcon = placeholder;
+    if (this.props.student && this.props.student.buddy) {
+      buddyIcon = buddyNameToIcon[this.props.student.buddy];
+    }
+
     return (
       <TouchableHighlight onPress={this.onBuddyPress.bind(this)}>
         <Image
           style={styles.buddyButton}
-          source={require('../../../images/buddy/BuddyPlaceholder.png')}
+          source={buddyIcon}
         />
       </TouchableHighlight>
     );
