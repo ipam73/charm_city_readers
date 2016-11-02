@@ -172,7 +172,7 @@ function createUser(email, password) {
 function logoutMobile(navigator) {
 
   return function(dispatch) {
-    firebaseRef.unauth().then(() => {
+    firebase.auth().signOut().then(() => {
       dispatch(logoutSuccess());
     }, (err) => {
       dispatch(authFailure(err));
@@ -393,8 +393,7 @@ function timeFormIsValid(newTime) {
 // newTime = {readDate: <string format YYMMDD>, readMinutes: <minutes>}
 function setStudentTime(readDate, readTime, studentID, parentID) {
   // makes some call to the db to save the new time stats
-
-  var parentsRef = new Firebase(firebaseURI + "parents/" + parentID);
+  var parentsRef = db.ref("/parents/" + parentID);
   var studentsTimeLogRef = parentsRef.child("students/" + studentID + "/time_log");
 
   // sets on time log with date in format:  YYMMDD
