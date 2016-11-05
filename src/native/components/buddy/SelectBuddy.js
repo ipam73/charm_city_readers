@@ -36,36 +36,40 @@ class SelectBuddy extends React.Component {
   render() {
     return (
       <View style={styles.main}>
-        <Text style={styles.subHeading}>Change Buddy:</Text>
-        <TouchableHighlight onPress={() => this.onBuddyPress("crab")}>
-          <Image
-            style={styles.buddyButton}
-            source={crabIcon}
-          />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.onBuddyPress("dog")}>
-          <Image
-            style={styles.buddyButton}
-            source={dogIcon}
-          />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.onBuddyPress("flag")}>
-          <Image
-            style={styles.buddyButton}
-            source={flagIcon}
-          />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.onBuddyPress("raven")}>
-          <Image
-            style={styles.buddyButton}
-            source={ravenIcon}
-          />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.onBuddyPress("sailboat")}>
-          <Image
-            style={styles.buddyButton}
-            source={sailboatIcon}
-          />
+        <TouchableHighlight style={styles.row}>
+          <View style={styles.headingContainer}>
+            
+            <TouchableHighlight onPress={() => this.onBuddyPress("crab")}>
+              <Image
+                style={styles.buddyButton}
+                source={crabIcon}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => this.onBuddyPress("dog")}>
+              <Image
+                style={styles.buddyButton}
+                source={dogIcon}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => this.onBuddyPress("flag")}>
+              <Image
+                style={styles.buddyButton}
+                source={flagIcon}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => this.onBuddyPress("raven")}>
+              <Image
+                style={styles.buddyButton}
+                source={ravenIcon}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => this.onBuddyPress("sailboat")}>
+              <Image
+                style={styles.buddyButton}
+                source={sailboatIcon}
+              />
+            </TouchableHighlight>
+          </View>
         </TouchableHighlight>
       </View>
     );
@@ -92,6 +96,9 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     marginRight: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    marginLeft: 10,
   },
   subRowContainer: {
     paddingBottom: 10,
