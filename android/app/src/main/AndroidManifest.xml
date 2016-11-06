@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.charm_city_readers"
+    package="com.reactnativesource"
     android:versionCode="1"
     android:versionName="1.0">
 

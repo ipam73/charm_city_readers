@@ -1,4 +1,4 @@
-package com.charm_city_readers;
+package com.reactnativesource;
 
 import android.app.Application;
 import android.util.Log;
