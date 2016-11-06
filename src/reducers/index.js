@@ -55,7 +55,6 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.TRIGGER_ADD_STUDENT:
-      console.log("in trigger add student");
       newstate.cleverAuthURL = action.cleverAuthURL;
       return newstate;
 
@@ -73,7 +72,6 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.SET_STUDENT_BUDDY:
-      console.log("in here set student buddy");
       return newstate;
 
     case Constants.TIME_FORM_IS_VALID:

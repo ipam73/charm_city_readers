@@ -53,25 +53,26 @@ class AddStudent extends React.Component {
     this.authAddStudent = this.authAddStudent.bind(this);
   }
 
-  // authAddStudent() {
-  //   console.log('adding student!');
-  //   const url = 'https://reading-challenge.herokuapp.com/addstudent?user=' + this.props.parentID;
-  //   Linking.canOpenURL(url).then(supported => {
-  //     if (!supported) {
-  //       console.log('Can\'t handle url: ' + url);
-  //     } else {
-  //       return Linking.openURL(url);
-  //     }
-  //   }).catch(err => console.error('An error occurred', err));
-  //   this.props.getStudentList(this.props.parentID);
-  // }
-
   authAddStudent() {
-    this.props.triggerAddStudent();
-    this.props.navigator.push({
-      name: 'Clever'
-    });
+    console.log('adding student!');
+    const url = 'https://reading-challenge.herokuapp.com/addstudent?user=' + this.props.parentID + '&mobile=true';
+    console.log("url is!: ", url);
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.log('Can\'t handle url: ' + url);
+      } else {
+        return Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+    this.props.getStudentList(this.props.parentID);
   }
+
+  // authAddStudent() {
+  //   this.props.triggerAddStudent(this.props.parentID);
+  //   this.props.navigator.push({
+  //     name: 'Clever'
+  //   });
+  // }
 
   render() {
     return (

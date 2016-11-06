@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   Text,
+  Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
 import actions from '../actions';
@@ -131,6 +132,7 @@ class AppContainer extends React.Component {
 
   renderScene(route, navigator) {
     var component;
+    console.log("in render scene app container, route is: ", route);
     switch (route.name) {
       case 'About':
         component = About;
@@ -148,12 +150,19 @@ class AppContainer extends React.Component {
         component = Homepage;
         break;
       case 'Landingpage':
+        console.log("in landing page");
         component = Landingpage;
+        if (this.props.isAuthenticated) {
+          console.log(" in is authenticated!****");
+          component = Homepage;
+          route.name = 'Homepage';
+          route.title = 'Charm City Readers';
+        }
         break;
       case 'Login':
         component = Login;
         if (this.props.isAuthenticated) {
-          // console.log(" in is authenticated!****");
+          console.log(" in is authenticated!****");
           component = Homepage;
           route.name = 'Homepage';
           route.title = 'Charm City Readers';
@@ -188,11 +197,33 @@ class AppContainer extends React.Component {
     );
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRoute: {name: 'Landingpage', title: '', display: false},
+    };
+  }
+
+  componentDidMount() {
+    console.log("appcontainer - in component did mount");
+    const url = Linking.getInitialURL().then(url => {
+
+      if (url) {
+        const routeName = url.replace(/.*?:\/\//g, "");
+        if (routeName.toLowerCase() === "homepage") {
+          if (this.props.isAuthenticated) {
+            this.props.getStudentList(this.props.parentID);
+          }
+        }
+      }
+    });
+  }
+
   render() {
     return (
       <Navigator
         style={styles.mainContainer}
-        initialRoute={{name: 'Landingpage', title: '', display: false}}
+        initialRoute={this.state.initialRoute}
         renderScene={this.renderScene.bind(this)}
         navigationBar={
           <Header
@@ -206,14 +237,21 @@ class AppContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // console.log("in map state to props: isAuthenticated: ", state.reducers.isAuthenticated);
+  var parentID = '';
+  if (state.reducers.user) {
+    parentID = state.reducers.user.uid;
+  }
   return {
     isAuthenticated: state.reducers.isAuthenticated,
+    parentID,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    getStudentList: (parentID) => {
+      dispatch(actions.getStudentList(parentID));
+    },
   };
 }
 

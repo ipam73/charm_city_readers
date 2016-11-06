@@ -286,12 +286,11 @@ function getCsrfHeader() {
 
 function triggerAddStudent(parentID) {
   const cleverAuthURL = 'https://reading-challenge.herokuapp.com/addstudent?user=' + parentID;
-  // const cleverAuthURL = 'https://reading-challenge.herokuapp.com'
+  console.log("cleverAuthURL", cleverAuthURL);
   return {
     type: Constants.TRIGGER_ADD_STUDENT,
     cleverAuthURL: cleverAuthURL,
   };
-
 }
 
 function addStudent(userID) {
