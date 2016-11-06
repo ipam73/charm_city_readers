@@ -10,16 +10,15 @@ var initialState = {
   errorMessage: '',
   weeksLeft: 0,
   daysLeft: 0,
+  cleverAuthURL: '',
 };
 
 function getTotalTimeForStudent(student) {
   var time_log = student.time_log;
   var total_time = 0;
-
   if (time_log !== null && typeof time_log === 'object') {
     total_time = _.reduce(time_log, function(memo, num){ return memo + parseInt(num); }, 0);
   }
-
   return total_time;
 }
 
@@ -53,6 +52,11 @@ function rootReducer(state, action) {
       }
       // not sure if we want to do this here or not
 
+      return newstate;
+
+    case Constants.TRIGGER_ADD_STUDENT:
+      console.log("in trigger add student");
+      newstate.cleverAuthURL = action.cleverAuthURL;
       return newstate;
 
     case Constants.ADD_STUDENT:

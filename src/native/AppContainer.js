@@ -11,6 +11,7 @@ import actions from '../actions';
 // pages
 import About from './components/About';
 import AddTimeScreen from './components/time/AddTimeScreen';
+import CleverWebView from './components/add-student/CleverWebView';
 import Homepage from './components/Homepage';
 import Landingpage from './components/Landingpage';
 import Login from './components/login/Login';
@@ -92,7 +93,11 @@ class AppContainer extends React.Component {
   navigationBarRouteMapper(onToggle) {
     return ({
       LeftButton(route, navigator, index, navState) {
-        if (route.name === 'AddTimeScreen' || route.name === 'Login' || route.name == 'Buddy') {
+        if (
+          route.name === 'AddTimeScreen' 
+          || route.name === 'Login' 
+          || route.name === 'Buddy'
+          || route.name === 'Clever') {
           return (
             <TouchableHighlight
               underlayColor="transparent"
@@ -135,6 +140,9 @@ class AppContainer extends React.Component {
         break;
       case 'Buddy':
         component = SelectBuddy;
+        break;
+      case 'Clever':
+        component = CleverWebView;
         break;
       case 'Homepage':
         component = Homepage;

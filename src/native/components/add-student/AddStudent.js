@@ -50,20 +50,27 @@ var styles = StyleSheet.create({
 class AddStudent extends React.Component {
   constructor(props) {
     super(props);
-    this.triggerAddStudent = this.triggerAddStudent.bind(this);
+    this.authAddStudent = this.authAddStudent.bind(this);
   }
 
-  triggerAddStudent() {
-    console.log('adding student!');
-    const url = 'https://reading-challenge.herokuapp.com/addstudent?user=' + this.props.parentID;
-    Linking.canOpenURL(url).then(supported => {
-      if (!supported) {
-        console.log('Can\'t handle url: ' + url);
-      } else {
-        return Linking.openURL(url);
-      }
-    }).catch(err => console.error('An error occurred', err));
-    this.props.getStudentList(this.props.parentID);
+  // authAddStudent() {
+  //   console.log('adding student!');
+  //   const url = 'https://reading-challenge.herokuapp.com/addstudent?user=' + this.props.parentID;
+  //   Linking.canOpenURL(url).then(supported => {
+  //     if (!supported) {
+  //       console.log('Can\'t handle url: ' + url);
+  //     } else {
+  //       return Linking.openURL(url);
+  //     }
+  //   }).catch(err => console.error('An error occurred', err));
+  //   this.props.getStudentList(this.props.parentID);
+  // }
+
+  authAddStudent() {
+    this.props.triggerAddStudent();
+    this.props.navigator.push({
+      name: 'Clever'
+    });
   }
 
   render() {
@@ -72,7 +79,7 @@ class AddStudent extends React.Component {
         <View style={styles.headingContainer}>
           <View style={styles.headingText}>
             <Text style={styles.headingTitle}>Add a Student</Text>
-            <TouchableHighlight onPress={this.triggerAddStudent}>
+            <TouchableHighlight onPress={this.authAddStudent}>
               <Image
                 style={styles.button}
                 source={icon}
@@ -104,6 +111,9 @@ function mapDispatchToProps(dispatch) {
     getStudentList: (parentID) => {
       dispatch(actions.getStudentList(parentID));
     },
+    triggerAddStudent: (parentID) => {
+      dispatch(actions.triggerAddStudent(parentID));
+    }
   };
 }
 

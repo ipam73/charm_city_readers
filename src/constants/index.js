@@ -10,6 +10,7 @@ module.exports = keyMirror({
   SET_STUDENT_TIME_STATE: null,
   SET_STUDENT_BUDDY: null, 
   TIME_FORM_IS_VALID: null,
+  TRIGGER_ADD_STUDENT: null,
   LOGIN_SUCCESS: null,
   LOGIN_FAILURE: null,
   LOGOUT_SUCCESS: null,

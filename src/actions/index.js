@@ -284,6 +284,16 @@ function getCsrfHeader() {
 //   });
 // }
 
+function triggerAddStudent(parentID) {
+  const cleverAuthURL = 'https://reading-challenge.herokuapp.com/addstudent?user=' + parentID;
+  // const cleverAuthURL = 'https://reading-challenge.herokuapp.com'
+  return {
+    type: Constants.TRIGGER_ADD_STUDENT,
+    cleverAuthURL: cleverAuthURL,
+  };
+
+}
+
 function addStudent(userID) {
   // uses redux-thunk middleware
   return function(dispatch) {
@@ -460,6 +470,7 @@ module.exports = {
   getStudentList,
   setStudentTime,
   setStudentBuddy,
+  triggerAddStudent,
   addStudent,
   addStudentFailure,
   addStudentSuccess,

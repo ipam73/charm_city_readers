@@ -36,7 +36,7 @@ make run
 ```
     open genymotion -> start virtual device
     react-native run-android
-    adb logcat *:S ReactNative:V ReactNativeJS:V // SHOWS ANDROID LOGS
+    react-native log-android // SHOWS ANDROID LOGS
 ```
 
 To update apk:
