@@ -1,16 +1,9 @@
-// library that deals with talking to backend
 var Constants = require('../constants');
-// var $ = require("jquery");
 var _ = require("underscore");
 var moment = require("moment");
-// var { push } = require("react-router-redux")
 
-/////////////////////////////////////////////////////////
-// Downgrading to firebase 2.4, since newsest version does not work w/react
-// see:  https://medium.com/@Pier/firebase-is-broken-for-react-native-7f78b7a066da#.gotw818vu
-// and PR: https://github.com/ipam73/reading-challenge/commit/35247388d6ccc29a8dfd2bb1768da3e13a2c07df
-import * as firebase from 'firebase';
 // Initialize Firebase
+import * as firebase from 'firebase';
 const firebaseConfig = {
   apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
     authDomain: "reading-challenge.firebaseapp.com",
@@ -19,43 +12,11 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
-
-// var firebase = require('firebase')
-// var config = {
-//     apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
-//     authDomain: "reading-challenge.firebaseapp.com",
-//     databaseURL: "https://reading-challenge.firebaseio.com",
-//     storageBucket: "firebase-reading-challenge.appspot.com",
-// };
-// firebase.initializeApp(config);
 var db = firebase.database();
-/////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////
-// Temporary workaround until Firebase fixes bug
-// var Firebase = require('firebase');
-// var firebaseURI = "https://reading-challenge.firebaseio.com/";
-// var firebaseRef = new Firebase(firebaseURI);
-
-// function setFirebaseRef(ref) {
-//   return {
-//     type: 'FIREBASE_REF_SET',
-//     value: ref,
-//   };
-// }
-/////////////////////////////////////////////////////////////
-
-// helper function for ajax calls
-function getCookie(name) {
-  var parts = document.cookie.split(name + "=");
-  if (parts.length === 2) {
-    var v = parts.pop().split(";").shift();
-    return decodeURIComponent(v);
-  }
-}
 
 function authFailure(err) {
-  // console.log("authFailure:", err);
+  console.log("authFailure:", err);
   return {
     type: Constants.LOGIN_FAILURE,
     error: err,
@@ -101,7 +62,14 @@ function loginWithPassword(email, password) {
   }
 }
 
+function setLoading() {
+  return {
+    type: Constants.SET_LOADING,
+  };
+}
+
 function loginWithPasswordNative(email, password, navigator) {
+  console.log("trying to log in w/password");
   return function(dispatch) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
 
@@ -116,25 +84,16 @@ function loginWithPasswordNative(email, password, navigator) {
       if (user) {
         var name = user.displayName;
         var email = user.email;
-        // var photoUrl = user.photoURL;
         var uid = user.uid;
-        console.log("got in here!", user);
-        console.log("got:", name, email, uid);
+
         responseUser.displayName = email;
         responseUser.uid = uid;
-        // User is signed in.
       } else {
         console.log("did not find user!", result);
-
-        // No user is signed in.
       }
-      // console.log("new user is: ", user);
       dispatch(loginSuccess(null, responseUser));
-      // console.log("dispatch new student list ", user.uid);
-      dispatch(getStudentList(user.uid));
-
     }).catch(function(err) {
-      // console.log("error logging in with email/password", err);
+      console.log("error logging in with email/password", err);
       dispatch(authFailure(err));
     });
   }
@@ -149,10 +108,12 @@ function createUserFailure(err) {
 }
 
 function createUserNative(email, password, navigator) {
+  console.log("trying to create a new user: ");
   return function(dispatch) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
       dispatch(loginWithPasswordNative(email, password, navigator));
     }).catch(function(err) {
+      console.log("in catch, there is an error!");
       dispatch(createUserFailure(err));
     });
   };
@@ -240,50 +201,6 @@ function restoreAuth() {
     };
 }
 
-// helper function for ajax calls
-function getCsrfHeader() {
-  return { "x-csrf-token": getCookie("csrf-token") };
-}
-
-// ajax call for new student login
-// function _postAddStudent(userID) {
-//   return $.ajax({
-//     url: `/addstudent?user=${userID}`,
-//     dataType: 'jsonp',
-//     contentType: 'text/html',
-//     method: "GET",
-//     headers: { 'Access-Control-Allow-Origin': '*', 'contentType' : 'text/html', 'X-Request': 'JSON'},
-//     crossDomain: true,
-//     // 'X-Request': 'JSON',
-
-//     // xhrFields: {
-//     //   // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-//     //   // This can be used to set the 'withCredentials' property.
-//     //   // Set the value to 'true' if you'd like to pass cookies to the server.
-//     //   // If this is enabled, your server must respond with the header
-//     //   // 'Access-Control-Allow-Credentials: true'.
-//     //   withCredentials: false,
-//     // },
-//     // datatype: 'jsonp',
-//     // 'Accept': 'application/json',
-
-//   });
-// }
-
-
-// ajax call for new student logut
-// function _logoutStudent(query) {
-//   return $.ajax({
-//     url: "/logout",
-//     method: "POST",
-//     // headers: getCsrfHeader(),
-//     headers: { 'Access-Control-Allow-Origin': '*' },
-//     crossDomain: true,
-//     datatype: 'jsonp',
-//     data: query
-//   });
-// }
-
 function triggerAddStudent(parentID) {
   const cleverAuthURL = 'https://reading-challenge.herokuapp.com/addstudent?user=' + parentID;
   console.log("cleverAuthURL", cleverAuthURL);
@@ -313,9 +230,6 @@ function addStudent(userID) {
 }
 
 function addStudentSuccess() {
-  // console.log("addStudentSuccess: ");
-
-
   return {
     type: Constants.ADD_STUDENT_SUCCESS,
     studentList: {} //load this in the list in
@@ -362,20 +276,25 @@ function getChallengeEndDate(students) {
         break;
       }
 
-      // all saved dates are in format YYMMDD
-      var ref = db.ref("/challenges/" + districtID).once("value", (snapshot) => {
-        dispatch(setStudentList(students, snapshot.val()));
-      });
+      if (districtID) {
+        // all saved dates are in format YYMMDD
+        var ref = db.ref("/challenges/" + districtID).once("value", (snapshot) => {
+          dispatch(setStudentList(students, snapshot.val()));
+        });        
+      } else {
+        dispatch(setStudentList(students, ""))
+      }
+
 
     }
   };
 }
 
 function setStudentList(students, challenges) {
+  var challengeEndDate = "";
   if (!students) {
     students = {};
   }
-  var challengeEndDate;
   if (challenges) {
     challengeEndDate = challenges.curr_end_date;
   }
@@ -388,14 +307,9 @@ function setStudentList(students, challenges) {
 
 // GET ALL THE DATA FOR STUDENTS
 function getStudentList(parent_id) {
-  // console.log("ACTIONS: getStudentList");
+  console.log("getting all the students!")
   return (dispatch, getState) => {
-    console.log("in get student list");
-    ///////////////////////////////////////////////////////////////////////
-    // temporarily commenting out until firebase fixes bug, see top of file
     var ref = db.ref("/parents/" + parent_id);
-    console.log("ACTIONS: getStudentList. parent:", parent_id);
-    // var ref = new Firebase(firebaseURI + "parents/" + parent_id);
     return ref.child("students").once("value", (snapshot) => {
       dispatch(getChallengeEndDate(snapshot.val()));
     });
@@ -478,6 +392,7 @@ module.exports = {
   loginWithGoogle,
   loginWithPassword,
   loginWithPasswordNative,
+  setLoading,
   createUser,
   createUserNative,
   isLoggedIn,

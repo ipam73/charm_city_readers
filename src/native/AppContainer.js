@@ -152,7 +152,7 @@ class AppContainer extends React.Component {
       case 'Landingpage':
         console.log("in landing page");
         component = Landingpage;
-        if (this.props.isAuthenticated) {
+        if (this.props.user) {
           console.log(" in is authenticated!****");
           component = Homepage;
           route.name = 'Homepage';
@@ -161,7 +161,7 @@ class AppContainer extends React.Component {
         break;
       case 'Login':
         component = Login;
-        if (this.props.isAuthenticated) {
+        if (this.props.user) {
           console.log(" in is authenticated!****");
           component = Homepage;
           route.name = 'Homepage';
@@ -211,7 +211,7 @@ class AppContainer extends React.Component {
       if (url) {
         const routeName = url.replace(/.*?:\/\//g, "");
         if (routeName.toLowerCase() === "homepage") {
-          if (this.props.isAuthenticated) {
+          if (this.props.user) {
             this.props.getStudentList(this.props.parentID);
           }
         }
@@ -242,7 +242,7 @@ function mapStateToProps(state) {
     parentID = state.reducers.user.uid;
   }
   return {
-    isAuthenticated: state.reducers.isAuthenticated,
+    user: state.reducers.user,
     parentID,
   };
 }

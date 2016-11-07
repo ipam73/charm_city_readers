@@ -6,11 +6,11 @@ var initialState = {
   studentList: {},
   timeForm: {},
   user: null, // auth.currentUser,
-  isAuthenticated: false,
   errorMessage: '',
   weeksLeft: 0,
   daysLeft: 0,
   cleverAuthURL: '',
+  isLoading: false,
 };
 
 function getTotalTimeForStudent(student) {
@@ -74,6 +74,11 @@ function rootReducer(state, action) {
     case Constants.SET_STUDENT_BUDDY:
       return newstate;
 
+    case Constants.SET_LOADING:
+      newstate.isLoading = true;
+      newstate.errorMessage = '';
+      return newstate;
+
     case Constants.TIME_FORM_IS_VALID:
       newstate.timeForm[action.studentID].errors = action.errors;
       newstate.timeForm[action.studentID].formIsValid = action.formIsValid;
@@ -89,20 +94,20 @@ function rootReducer(state, action) {
         displayName: action.user.displayName,
         uid: action.user.uid,
       };
-      newstate.isAuthenticated = true;
+      newstate.isLoading = false;
       return newstate;
 
     case Constants.LOGIN_FAILURE:
       // console.log("in login failure");
       newstate.errorMessage = "Sign in failed, please try again with another username and/or password.";
       newstate.user = null;
-      newstate.isAuthenticated = false;
+      newstate.isLoading = false;
       return newstate;
 
     case Constants.LOGOUT_SUCCESS:
       // reset everything to initial state
       // newstate.user = null;
-      // newstate.isAuthenticated = false;
+      console.log("logout success");
       return _.clone(initialState);
 
     case Constants.CREATE_USER_FAILURE:
@@ -113,6 +118,7 @@ function rootReducer(state, action) {
       } else if (action.error.code === 'EMAIL_TAKEN') {
         newstate.errorMessage = "There was a problem creating your account, email is already taken.";
       }
+      newstate.isLoading = false;
       return newstate;
 
     default:
