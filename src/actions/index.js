@@ -43,32 +43,13 @@ function loginWithGoogle() {
   };
 }
 
-function loginWithPassword(email, password) {
-
-  return function(dispatch) {
-    (new Firebase(firebaseURI)).authWithPassword({email: email, password:password}).then(function(result) {
-      // console.log("login with email/password complete", result);
-      var user = {
-        displayName: email,
-        uid: result.uid,
-      };
-      dispatch(loginSuccess(null, user));
-      dispatch(getStudentList(user.uid));
-      // dispatch(push("/"));
-    }).catch(function(err) {
-      // console.log("error logging in with email/password", err);
-      dispatch(authFailure(err));
-    });
-  }
-}
-
 function setLoading() {
   return {
     type: Constants.SET_LOADING,
   };
 }
 
-function loginWithPasswordNative(email, password, navigator) {
+function loginWithPassword(email, password) {
   console.log("trying to log in w/password");
   return function(dispatch) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
@@ -107,11 +88,11 @@ function createUserFailure(err) {
   };
 }
 
-function createUserNative(email, password, navigator) {
+function createUser(email, password) {
   console.log("trying to create a new user: ");
   return function(dispatch) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
-      dispatch(loginWithPasswordNative(email, password, navigator));
+      dispatch(loginWithPassword(email, password));
     }).catch(function(err) {
       console.log("in catch, there is an error!");
       dispatch(createUserFailure(err));
@@ -119,18 +100,7 @@ function createUserNative(email, password, navigator) {
   };
 }
 
-function createUser(email, password) {
-  return function(dispatch) {
-    (new Firebase(firebaseURI)).createUser({email: email, password:password}).then(function(result) {
-      dispatch(loginWithPassword(email, password));
-    }).catch(function(err) {
-      dispatch(createUserFailure(err));
-    });
-  };
-}
-
-
-function logoutMobile(navigator) {
+function logoutMobile() {
 
   return function(dispatch) {
     firebase.auth().signOut().then(() => {
@@ -391,10 +361,8 @@ module.exports = {
   timeFormIsValid,
   loginWithGoogle,
   loginWithPassword,
-  loginWithPasswordNative,
   setLoading,
   createUser,
-  createUserNative,
   isLoggedIn,
   restoreAuth,
   logout,

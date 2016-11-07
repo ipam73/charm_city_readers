@@ -184,10 +184,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loginWithPassword: (email, password, navigator) => {
-      dispatch(actions.loginWithPasswordNative(email, password, navigator));
+      dispatch(actions.loginWithPassword(email, password, navigator));
     },
     createUser: (email, password, navigator) => {
-      dispatch(actions.createUserNative(email, password, navigator));
+      dispatch(actions.createUser(email, password, navigator));
     },
     setLoading: () => {
       dispatch(actions.setLoading());
