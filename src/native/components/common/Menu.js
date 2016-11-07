@@ -67,7 +67,7 @@ class Menu extends React.Component {
 
         <Text
           onPress={() => {
-            this.props.logoutMobile();
+            this.props.logout();
             this.props.onItemSelected('Landingpage', '', this.props.navigator);
           }}
           style={styles.item}
@@ -81,8 +81,8 @@ class Menu extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    logoutMobile: (navigator) => {
-      dispatch(actions.logoutMobile(navigator));
+    logout: (navigator) => {
+      dispatch(actions.logout(navigator));
     },
   };
 }

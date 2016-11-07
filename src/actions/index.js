@@ -100,7 +100,7 @@ function createUser(email, password) {
   };
 }
 
-function logoutMobile() {
+function logout() {
 
   return function(dispatch) {
     firebase.auth().signOut().then(() => {
@@ -111,17 +111,17 @@ function logoutMobile() {
   };
 }
 
-function logout() {
+// function logout() {
 
-  return function(dispatch) {
-    firebaseRef.unauth().then(() => {
-      dispatch(logoutSuccess());
-      // dispatch(push("/login"));
-    }, (err) => {
-      dispatch(authFailure(err));
-    });
-  };
-}
+//   return function(dispatch) {
+//     firebaseRef.unauth().then(() => {
+//       dispatch(logoutSuccess());
+//       // dispatch(push("/login"));
+//     }, (err) => {
+//       dispatch(authFailure(err));
+//     });
+//   };
+// }
 
 function loginSuccess(token, user) {
   console.log("*** in login success", user);
@@ -366,5 +366,4 @@ module.exports = {
   isLoggedIn,
   restoreAuth,
   logout,
-  logoutMobile,
 };
