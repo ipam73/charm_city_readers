@@ -11,6 +11,7 @@ var initialState = {
   daysLeft: 0,
   cleverAuthURL: '',
   isLoading: false,
+  emptyState: true,
 };
 
 function getTotalTimeForStudent(student) {
@@ -42,6 +43,7 @@ function rootReducer(state, action) {
       // not sure if we want to do this here or not
       var studentIDs = Object.keys(newstate.studentList);
       for (var student_id of studentIDs) {
+        newstate.emptyState = false;
         var totalTime = getTotalTimeForStudent(newstate.studentList[student_id]);
         newstate.studentList[student_id].total_mins = totalTime;
         newstate.timeForm[student_id] = {

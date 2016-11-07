@@ -34,6 +34,7 @@ var styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: 'black',
+    marginBottom: 20,
   },
   button: {
     alignSelf: 'center',
@@ -47,7 +48,7 @@ var styles = StyleSheet.create({
 });
 
 
-class AddStudent extends React.Component {
+class AddStudentEmpty extends React.Component {
   constructor(props) {
     super(props);
     this.authAddStudent = this.authAddStudent.bind(this);
@@ -72,7 +73,11 @@ class AddStudent extends React.Component {
       <TouchableHighlight style={styles.row}>
         <View style={styles.headingContainer}>
           <View style={styles.headingText}>
-            <Text style={styles.headingTitle}>Add Another Student</Text>
+            <Text style={styles.headingTitle}>Welcome to Charm City Readers!</Text>
+            <Text>
+              This challenge will allow schools to compete to see who has the best readers in Baltimore. Parents should use this app to log minutes every time their children read.
+            </Text>
+
             <TouchableHighlight onPress={this.authAddStudent}>
               <Image
                 style={styles.button}
@@ -80,8 +85,7 @@ class AddStudent extends React.Component {
               />
             </TouchableHighlight>
             <Text>
-              Click the button to add a student using their Clever login credentials.
-              If you need help finding the right credentials please contact the school.
+              To get started with this app, add your student by clicking the "Log In with Clever" button above. You'll need to have your student's Clever login credentials ready.
             </Text>
           </View>
         </View>
@@ -111,4 +115,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(AddStudent);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(AddStudentEmpty);
