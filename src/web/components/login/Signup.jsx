@@ -98,10 +98,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     createUser: (email, password) => {
-      dispatch(actions.createUser(email, password));
+      dispatch(actions.createUser(email, password, true));
     },
     loginWithPassword: (email, password) => {
-      dispatch(actions.loginWithPassword(email, password));
+      dispatch(actions.loginWithPassword(email, password, true));
     },
   };
 }

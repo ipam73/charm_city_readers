@@ -63,7 +63,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loginWithGoogle: () => {
-      dispatch(actions.loginWithGoogle());
+      dispatch(actions.loginWithGoogle(true));
     },
   };
 }

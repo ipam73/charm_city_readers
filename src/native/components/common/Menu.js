@@ -81,8 +81,8 @@ class Menu extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    logout: (navigator) => {
-      dispatch(actions.logout(navigator));
+    logout: () => {
+      dispatch(actions.logout());
     },
   };
 }

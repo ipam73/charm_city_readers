@@ -12,6 +12,7 @@ var initialState = {
   cleverAuthURL: '',
   isLoading: false,
   emptyState: true,
+  isAuthenticated: false,
 };
 
 function getTotalTimeForStudent(student) {
@@ -97,6 +98,7 @@ function rootReducer(state, action) {
         uid: action.user.uid,
       };
       newstate.isLoading = false;
+      newstate.isAuthenticated = true;
       return newstate;
 
     case Constants.LOGIN_FAILURE:
@@ -104,6 +106,7 @@ function rootReducer(state, action) {
       newstate.errorMessage = "Sign in failed, please try again with another username and/or password.";
       newstate.user = null;
       newstate.isLoading = false;
+      newstate.isAuthenticated = true;
       return newstate;
 
     case Constants.LOGOUT_SUCCESS:

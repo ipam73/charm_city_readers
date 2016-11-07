@@ -27,13 +27,13 @@ class Login extends React.Component {
   onSignUpPress() {
     this.setState({buttonPressed: 'signup'});
     this.props.setLoading();
-    this.props.createUser(this.state.email, this.state.password, this.props.navigator);
+    this.props.createUser(this.state.email, this.state.password);
   }
 
   onLoginPress() {
     this.setState({buttonPressed: 'login'});
     this.props.setLoading();
-    this.props.loginWithPassword(this.state.email, this.state.password, this.props.navigator);
+    this.props.loginWithPassword(this.state.email, this.state.password);
   }
 
   onChangeUsername(text) {
@@ -183,11 +183,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginWithPassword: (email, password, navigator) => {
-      dispatch(actions.loginWithPassword(email, password, navigator));
+    loginWithPassword: (email, password) => {
+      dispatch(actions.loginWithPassword(email, password));
     },
-    createUser: (email, password, navigator) => {
-      dispatch(actions.createUser(email, password, navigator));
+    createUser: (email, password) => {
+      dispatch(actions.createUser(email, password));
     },
     setLoading: () => {
       dispatch(actions.setLoading());

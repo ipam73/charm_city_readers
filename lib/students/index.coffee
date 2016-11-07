@@ -1,33 +1,22 @@
 _ = require "underscore"
 config = require "#{__dirname}/../../web/config"
 
-###############################################################################
-## Downgrading to firebase 2.4, since newsest version does not work w/react
-## see:  https://medium.com/@Pier/firebase-is-broken-for-react-native-7f78b7a066da#.gotw818vu
-## and PR: https://github.com/ipam73/reading-challenge/commit/35247388d6ccc29a8dfd2bb1768da3e13a2c07df
-# firebase = require('firebase')
-# firebase.initializeApp { serviceAccount: config.FIREBASE_ACCOUNT, databaseURL: "https://reading-challenge.firebaseio.com" }
-# db = firebase.database()
-###############################################################################
+firebase = require('firebase')
+
+firebaseConfig =
+  apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw"
+  authDomain: "reading-challenge.firebaseapp.com"
+  databaseURL: "https://reading-challenge.firebaseio.com"
+  storageBucket: "firebase-reading-challenge.appspot.com"
+
+firebaseApp = firebase.initializeApp(firebaseConfig)
+firebaseRef = firebaseApp.database().ref()
+db = firebase.database()
+
 
 Firebase = require('firebase')
 firebaseURI = "https://reading-challenge.firebaseio.com/"
 
-### student schema
-  {
-    id: '1233',
-    name: 'Pam',
-    school: 'Elementary School',
-    total_mins: 445,
-    goal: 60,
-    grade: '4'
-    progress: [
-      {date: 1, mins: 45},
-      {date: 2, mins: 10},
-      {date: 3, mins: 65}
-    ]
-  }
-###
 save_student = (student_id, first_name, school_id, school_name, district_id, grade, parent_id) ->
   console.log "saving right now!"
   student_to_save =
@@ -40,10 +29,10 @@ save_student = (student_id, first_name, school_id, school_name, district_id, gra
     time_log: {}
 
   ## Downgrading to firebase 2.4, since newsest version does not work w/react
-  # parentsRef = db.ref("/parents/#{parent_id}")
-  # studentsRef = parentsRef.child("students")
-  parentsRef = new Firebase(firebaseURI + "parents/" + parent_id)
-  studentsRef = parentsRef.child("students/#{student_id}")
+  parentsRef = db.ref("/parents/#{parent_id}")
+  studentsRef = parentsRef.child("students")
+  # parentsRef = new Firebase(firebaseURI + "parents/" + parent_id)
+  # studentsRef = parentsRef.child("students/#{student_id}")
 
   # TODO: check for errors here. 
   studentsRef.update(student_to_save)

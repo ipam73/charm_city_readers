@@ -1,6 +1,7 @@
 var Constants = require('../constants');
 var _ = require("underscore");
 var moment = require("moment");
+var { push } = require("react-router-redux")
 
 // Initialize Firebase
 import * as firebase from 'firebase';
@@ -13,6 +14,9 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
 var db = firebase.database();
+var googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.addScope('profile');
+googleProvider.addScope('email');
 
 
 function authFailure(err) {
@@ -24,18 +28,28 @@ function authFailure(err) {
 }
 
 // action to login to Google via a popup. Dispatch error or user
-function loginWithGoogle() {
-
+function loginWithGoogle(isWebApp) {
   return function(dispatch) {
-    (new Firebase(firebaseURI)).authWithOAuthPopup('google').then(function(result) {
-      // console.log("oauth from google login complete", result);
-      var token = result.token; // empty in current scope
-      var user = result.google;
-      user.uid = result.uid;
+// Using a popup.
+    firebase.auth().signInWithPopup(googleProvider).then(function(result) {
+ 
+      // This gives you a Google Access Token.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // var token = result.token; // empty in current scope
+      // var user = result.google;
+      // user.uid = result.uid;
+      console.log("logged in with google!!!");
       dispatch(loginSuccess(token, user));
+
       // console.log("dispatching to push /about")
       dispatch(getStudentList(user.uid));
-      // dispatch(push("/"));
+
+      if (isWebApp) {
+        dispatch(push("/"));        
+      }
+
     }).catch(function(err) {
       // console.log("error logging in with google", err);
       dispatch(authFailure(err));
@@ -49,7 +63,7 @@ function setLoading() {
   };
 }
 
-function loginWithPassword(email, password) {
+function loginWithPassword(email, password, isWebApp) {
   console.log("trying to log in w/password");
   return function(dispatch) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
@@ -73,6 +87,10 @@ function loginWithPassword(email, password) {
         console.log("did not find user!", result);
       }
       dispatch(loginSuccess(null, responseUser));
+
+      if (isWebApp) {
+        dispatch(push("/"));
+      }
     }).catch(function(err) {
       console.log("error logging in with email/password", err);
       dispatch(authFailure(err));
@@ -88,11 +106,11 @@ function createUserFailure(err) {
   };
 }
 
-function createUser(email, password) {
+function createUser(email, password, isWebApp) {
   console.log("trying to create a new user: ");
   return function(dispatch) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
-      dispatch(loginWithPassword(email, password));
+      dispatch(loginWithPassword(email, password, isWebApp));
     }).catch(function(err) {
       console.log("in catch, there is an error!");
       dispatch(createUserFailure(err));
@@ -100,28 +118,19 @@ function createUser(email, password) {
   };
 }
 
-function logout() {
+function logout(isWebApp) {
 
   return function(dispatch) {
     firebase.auth().signOut().then(() => {
       dispatch(logoutSuccess());
+      if (isWebApp) {
+        dispatch(push("/login"));
+      }
     }, (err) => {
       dispatch(authFailure(err));
     });
   };
 }
-
-// function logout() {
-
-//   return function(dispatch) {
-//     firebaseRef.unauth().then(() => {
-//       dispatch(logoutSuccess());
-//       // dispatch(push("/login"));
-//     }, (err) => {
-//       dispatch(authFailure(err));
-//     });
-//   };
-// }
 
 function loginSuccess(token, user) {
   console.log("*** in login success", user);
@@ -142,33 +151,31 @@ function logoutSuccess() {
 
 // check if user is logged in. return user
 function isLoggedIn() {
-  var firebaseUser = firebaseRef.getAuth();
-  // console.log("IS_LOGGED_IN. firebaseUser:", firebaseUser);
+  var firebaseUser = firebase.auth().currentUser;
   var user = null;
-  if (firebaseUser) {
-
-    user = firebaseUser[firebaseUser.provider];
+  console.log("firebase user is: ", firebaseUser);
+  if (firebaseUser != null) {
     // hack for displayName to exist
-    if (firebaseUser[firebaseUser.provider].displayName) {
-      user.displayName = firebaseUser[firebaseUser.provider].displayName;
+    var user = {};
+    if (firebaseUser.displayName) {
+      user.displayName = firebaseUser.displayName;
     } else {
-      user.displayName = firebaseUser[firebaseUser.provider].email;
+      user.displayName = firebaseUser.email;
     }
     user.uid = firebaseUser.uid;
   }
-
   return user;
 };
 
 function restoreAuth() {
     // console.log("RESTORE_AUTH");
-    return function(dispatch) {
-        var user = isLoggedIn();
-        if (user) {
-          dispatch(loginSuccess(null, user));
-          dispatch(getStudentList(user.uid));
-        }
-    };
+  return function(dispatch) {
+    var user = isLoggedIn();
+    if (user) {
+      dispatch(loginSuccess(null, user));
+      dispatch(getStudentList(user.uid));
+    }
+  };
 }
 
 function triggerAddStudent(parentID) {
@@ -241,7 +248,7 @@ function getChallengeEndDate(students) {
     } else {
       var districtID;
 
-      for (studentID in students) {
+      for (var studentID in students) {
         districtID = students[studentID].district_id;
         break;
       }
