@@ -6,20 +6,21 @@ var initialState = {
   studentList: {},
   timeForm: {},
   user: null, // auth.currentUser,
-  isAuthenticated: false,
   errorMessage: '',
   weeksLeft: 0,
   daysLeft: 0,
+  cleverAuthURL: '',
+  isLoading: false,
+  emptyState: true,
+  isAuthenticated: false,
 };
 
 function getTotalTimeForStudent(student) {
   var time_log = student.time_log;
   var total_time = 0;
-
   if (time_log !== null && typeof time_log === 'object') {
     total_time = _.reduce(time_log, function(memo, num){ return memo + parseInt(num); }, 0);
   }
-
   return total_time;
 }
 
@@ -43,6 +44,7 @@ function rootReducer(state, action) {
       // not sure if we want to do this here or not
       var studentIDs = Object.keys(newstate.studentList);
       for (var student_id of studentIDs) {
+        newstate.emptyState = false;
         var totalTime = getTotalTimeForStudent(newstate.studentList[student_id]);
         newstate.studentList[student_id].total_mins = totalTime;
         newstate.timeForm[student_id] = {
@@ -53,6 +55,10 @@ function rootReducer(state, action) {
       }
       // not sure if we want to do this here or not
 
+      return newstate;
+
+    case Constants.TRIGGER_ADD_STUDENT:
+      newstate.cleverAuthURL = action.cleverAuthURL;
       return newstate;
 
     case Constants.ADD_STUDENT:
@@ -69,7 +75,11 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.SET_STUDENT_BUDDY:
-      console.log("in here set student buddy");
+      return newstate;
+
+    case Constants.SET_LOADING:
+      newstate.isLoading = true;
+      newstate.errorMessage = '';
       return newstate;
 
     case Constants.TIME_FORM_IS_VALID:
@@ -87,6 +97,7 @@ function rootReducer(state, action) {
         displayName: action.user.displayName,
         uid: action.user.uid,
       };
+      newstate.isLoading = false;
       newstate.isAuthenticated = true;
       return newstate;
 
@@ -94,13 +105,14 @@ function rootReducer(state, action) {
       // console.log("in login failure");
       newstate.errorMessage = "Sign in failed, please try again with another username and/or password.";
       newstate.user = null;
-      newstate.isAuthenticated = false;
+      newstate.isLoading = false;
+      newstate.isAuthenticated = true;
       return newstate;
 
     case Constants.LOGOUT_SUCCESS:
       // reset everything to initial state
       // newstate.user = null;
-      // newstate.isAuthenticated = false;
+      console.log("logout success");
       return _.clone(initialState);
 
     case Constants.CREATE_USER_FAILURE:
@@ -111,6 +123,7 @@ function rootReducer(state, action) {
       } else if (action.error.code === 'EMAIL_TAKEN') {
         newstate.errorMessage = "There was a problem creating your account, email is already taken.";
       }
+      newstate.isLoading = false;
       return newstate;
 
     default:

@@ -16,6 +16,7 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
+      buttonPressed: '',
     };
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
@@ -24,11 +25,15 @@ class Login extends React.Component {
   }
 
   onSignUpPress() {
-    this.props.createUser(this.state.email, this.state.password, this.props.navigator);
+    this.setState({buttonPressed: 'signup'});
+    this.props.setLoading();
+    this.props.createUser(this.state.email, this.state.password);
   }
 
   onLoginPress() {
-    this.props.loginWithPassword(this.state.email, this.state.password, this.props.navigator);
+    this.setState({buttonPressed: 'login'});
+    this.props.setLoading();
+    this.props.loginWithPassword(this.state.email, this.state.password);
   }
 
   onChangeUsername(text) {
@@ -40,6 +45,18 @@ class Login extends React.Component {
   }
 
   render() {
+    var signupLoading = false;
+    var signupDisabled = false;
+    var loginLoading = false;
+    var loginDisabled = false;
+    if (this.state.buttonPressed === 'signup' && this.props.isLoading) {
+      signupLoading = true;
+      loginDisabled = true;
+    } else if (this.state.buttonPressed === 'login' && this.props.isLoading) {
+      loginLoading = true;
+      signupDisabled = true;
+    }
+
     return (
       <View style={styles.main}>
         <TouchableHighlight style={styles.row}>
@@ -60,15 +77,27 @@ class Login extends React.Component {
                 />
               </View>
             </View>
+            <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
             <View style={styles.buttons}>
-              <Button style={styles.button} textStyle={styles.buttonText} onPress={this.onLoginPress}>
+              <Button
+                style={styles.button}
+                textStyle={styles.buttonText}
+                onPress={this.onLoginPress}
+                isLoading={loginLoading}
+                isDisabled={loginDisabled}
+              >
                 Sign In
               </Button>
-              <Button style={styles.buttonSignUp} textStyle={styles.buttonTextSignUp} onPress={this.onSignUpPress}>
+              <Button
+                style={styles.buttonSignUp}
+                textStyle={styles.buttonTextSignUp}
+                onPress={this.onSignUpPress}
+                isLoading={signupLoading}
+                isDisabled={signupDisabled}
+              >
                 Sign Up
               </Button>
             </View>
-            <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -148,17 +177,21 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     errorMessage: state.reducers.errorMessage,
+    isLoading: state.reducers.isLoading,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginWithPassword: (email, password, navigator) => {
-      dispatch(actions.loginWithPasswordNative(email, password, navigator));
+    loginWithPassword: (email, password) => {
+      dispatch(actions.loginWithPassword(email, password));
     },
-    createUser: (email, password, navigator) => {
-      dispatch(actions.createUserNative(email, password, navigator));
+    createUser: (email, password) => {
+      dispatch(actions.createUser(email, password));
     },
+    setLoading: () => {
+      dispatch(actions.setLoading());
+    }
   };
 }
 

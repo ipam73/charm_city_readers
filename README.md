@@ -36,19 +36,18 @@ make run
 ```
     open genymotion -> start virtual device
     react-native run-android
-    adb logcat *:S ReactNative:V ReactNativeJS:V // SHOWS ANDROID LOGS
+    react-native log-android // SHOWS ANDROID LOGS
 ```
 
 To update apk:
 - Update version in: `/android/app/src/main/AndroidManifest.xml` and `android/app/build.gradle`
 - Generete apk:  `cd android && ./gradlew assembleRelease`
+- Test prod release locally with: react-native run-android --variant=release
+- Troubleshooting:  adb -e uninstall com.reactnativesource
 - Upload to dev console in play store
 
 To test on android device:
 - If old android phone, follow [instructions](http://stackoverflow.com/questions/34500020/referenceerror-cant-find-variable-fbbatchedbridge).  When entering port in dev settings, make sure to enter ip:8081.
-
-or
-- generate apk, install directly with
 
 
 To test:

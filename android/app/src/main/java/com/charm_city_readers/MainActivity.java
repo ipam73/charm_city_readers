@@ -1,4 +1,4 @@
-package com.charm_city_readers;
+package com.reactnativesource;
 
 import com.facebook.react.ReactActivity;
 

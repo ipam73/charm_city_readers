@@ -26,7 +26,7 @@ Logout.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     logout: () => {
-      dispatch(actions.logout());
+      dispatch(actions.logout(true));
     },
   };
 }

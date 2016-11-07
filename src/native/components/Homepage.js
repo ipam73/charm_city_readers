@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import actions from '../../actions';
 import StudentList from './summary/StudentList';
 import AddStudent from './add-student/AddStudent';
+import AddStudentEmpty from './add-student/AddStudentEmpty';
 
 import {
   StyleSheet,
@@ -26,13 +27,18 @@ class Homepage extends React.Component {
   }
 
   render() {
+    var addStudentComponent = <AddStudent navigator={this.props.navigator} />
+    if (this.props.emptyState) {
+      addStudentComponent = <AddStudentEmpty navigator={this.props.navigator} />;
+    }
+
     return (
       <ScrollView
         contentInset={{top: -50}}
         style={styles.main}
       >
         <StudentList students={this.props.students} navigator={this.props.navigator} />
-        <AddStudent navigator={this.props.navigator} />
+        {addStudentComponent}
         <View style={{height: 100}} />
       </ScrollView>
     );
@@ -53,6 +59,7 @@ function mapStateToProps(state, props) {
   return {
     students: state.reducers.studentList,
     navigator: props.navigator,
+    emptyState: state.reducers.emptyState,
     parentID,
   };
 }

@@ -1,16 +1,10 @@
-// library that deals with talking to backend
 var Constants = require('../constants');
-// var $ = require("jquery");
 var _ = require("underscore");
 var moment = require("moment");
-// var { push } = require("react-router-redux")
+var { push } = require("react-router-redux")
 
-/////////////////////////////////////////////////////////
-// Downgrading to firebase 2.4, since newsest version does not work w/react
-// see:  https://medium.com/@Pier/firebase-is-broken-for-react-native-7f78b7a066da#.gotw818vu
-// and PR: https://github.com/ipam73/reading-challenge/commit/35247388d6ccc29a8dfd2bb1768da3e13a2c07df
-import * as firebase from 'firebase';
 // Initialize Firebase
+import * as firebase from 'firebase';
 const firebaseConfig = {
   apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
     authDomain: "reading-challenge.firebaseapp.com",
@@ -19,43 +13,14 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
-
-// var firebase = require('firebase')
-// var config = {
-//     apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
-//     authDomain: "reading-challenge.firebaseapp.com",
-//     databaseURL: "https://reading-challenge.firebaseio.com",
-//     storageBucket: "firebase-reading-challenge.appspot.com",
-// };
-// firebase.initializeApp(config);
 var db = firebase.database();
-/////////////////////////////////////////////////////////
+var googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.addScope('profile');
+googleProvider.addScope('email');
 
-///////////////////////////////////////////////////////////
-// Temporary workaround until Firebase fixes bug
-// var Firebase = require('firebase');
-// var firebaseURI = "https://reading-challenge.firebaseio.com/";
-// var firebaseRef = new Firebase(firebaseURI);
-
-// function setFirebaseRef(ref) {
-//   return {
-//     type: 'FIREBASE_REF_SET',
-//     value: ref,
-//   };
-// }
-/////////////////////////////////////////////////////////////
-
-// helper function for ajax calls
-function getCookie(name) {
-  var parts = document.cookie.split(name + "=");
-  if (parts.length === 2) {
-    var v = parts.pop().split(";").shift();
-    return decodeURIComponent(v);
-  }
-}
 
 function authFailure(err) {
-  // console.log("authFailure:", err);
+  console.log("authFailure:", err);
   return {
     type: Constants.LOGIN_FAILURE,
     error: err,
@@ -63,18 +28,28 @@ function authFailure(err) {
 }
 
 // action to login to Google via a popup. Dispatch error or user
-function loginWithGoogle() {
-
+function loginWithGoogle(isWebApp) {
   return function(dispatch) {
-    (new Firebase(firebaseURI)).authWithOAuthPopup('google').then(function(result) {
-      // console.log("oauth from google login complete", result);
-      var token = result.token; // empty in current scope
-      var user = result.google;
-      user.uid = result.uid;
+// Using a popup.
+    firebase.auth().signInWithPopup(googleProvider).then(function(result) {
+ 
+      // This gives you a Google Access Token.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // var token = result.token; // empty in current scope
+      // var user = result.google;
+      // user.uid = result.uid;
+      console.log("logged in with google!!!");
       dispatch(loginSuccess(token, user));
+
       // console.log("dispatching to push /about")
       dispatch(getStudentList(user.uid));
-      // dispatch(push("/"));
+
+      if (isWebApp) {
+        dispatch(push("/"));        
+      }
+
     }).catch(function(err) {
       // console.log("error logging in with google", err);
       dispatch(authFailure(err));
@@ -82,26 +57,14 @@ function loginWithGoogle() {
   };
 }
 
-function loginWithPassword(email, password) {
-
-  return function(dispatch) {
-    (new Firebase(firebaseURI)).authWithPassword({email: email, password:password}).then(function(result) {
-      // console.log("login with email/password complete", result);
-      var user = {
-        displayName: email,
-        uid: result.uid,
-      };
-      dispatch(loginSuccess(null, user));
-      dispatch(getStudentList(user.uid));
-      // dispatch(push("/"));
-    }).catch(function(err) {
-      // console.log("error logging in with email/password", err);
-      dispatch(authFailure(err));
-    });
-  }
+function setLoading() {
+  return {
+    type: Constants.SET_LOADING,
+  };
 }
 
-function loginWithPasswordNative(email, password, navigator) {
+function loginWithPassword(email, password, isWebApp) {
+  console.log("trying to log in w/password");
   return function(dispatch) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
 
@@ -116,25 +79,20 @@ function loginWithPasswordNative(email, password, navigator) {
       if (user) {
         var name = user.displayName;
         var email = user.email;
-        // var photoUrl = user.photoURL;
         var uid = user.uid;
-        console.log("got in here!", user);
-        console.log("got:", name, email, uid);
+
         responseUser.displayName = email;
         responseUser.uid = uid;
-        // User is signed in.
       } else {
         console.log("did not find user!", result);
-
-        // No user is signed in.
       }
-      // console.log("new user is: ", user);
       dispatch(loginSuccess(null, responseUser));
-      // console.log("dispatch new student list ", user.uid);
-      dispatch(getStudentList(user.uid));
 
+      if (isWebApp) {
+        dispatch(push("/"));
+      }
     }).catch(function(err) {
-      // console.log("error logging in with email/password", err);
+      console.log("error logging in with email/password", err);
       dispatch(authFailure(err));
     });
   }
@@ -148,44 +106,26 @@ function createUserFailure(err) {
   };
 }
 
-function createUserNative(email, password, navigator) {
+function createUser(email, password, isWebApp) {
+  console.log("trying to create a new user: ");
   return function(dispatch) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
-      dispatch(loginWithPasswordNative(email, password, navigator));
+      dispatch(loginWithPassword(email, password, isWebApp));
     }).catch(function(err) {
+      console.log("in catch, there is an error!");
       dispatch(createUserFailure(err));
     });
   };
 }
 
-function createUser(email, password) {
-  return function(dispatch) {
-    (new Firebase(firebaseURI)).createUser({email: email, password:password}).then(function(result) {
-      dispatch(loginWithPassword(email, password));
-    }).catch(function(err) {
-      dispatch(createUserFailure(err));
-    });
-  };
-}
-
-
-function logoutMobile(navigator) {
+function logout(isWebApp) {
 
   return function(dispatch) {
     firebase.auth().signOut().then(() => {
       dispatch(logoutSuccess());
-    }, (err) => {
-      dispatch(authFailure(err));
-    });
-  };
-}
-
-function logout() {
-
-  return function(dispatch) {
-    firebaseRef.unauth().then(() => {
-      dispatch(logoutSuccess());
-      // dispatch(push("/login"));
+      if (isWebApp) {
+        dispatch(push("/login"));
+      }
     }, (err) => {
       dispatch(authFailure(err));
     });
@@ -211,78 +151,41 @@ function logoutSuccess() {
 
 // check if user is logged in. return user
 function isLoggedIn() {
-  var firebaseUser = firebaseRef.getAuth();
-  // console.log("IS_LOGGED_IN. firebaseUser:", firebaseUser);
+  var firebaseUser = firebase.auth().currentUser;
   var user = null;
-  if (firebaseUser) {
-
-    user = firebaseUser[firebaseUser.provider];
+  console.log("firebase user is: ", firebaseUser);
+  if (firebaseUser != null) {
     // hack for displayName to exist
-    if (firebaseUser[firebaseUser.provider].displayName) {
-      user.displayName = firebaseUser[firebaseUser.provider].displayName;
+    var user = {};
+    if (firebaseUser.displayName) {
+      user.displayName = firebaseUser.displayName;
     } else {
-      user.displayName = firebaseUser[firebaseUser.provider].email;
+      user.displayName = firebaseUser.email;
     }
     user.uid = firebaseUser.uid;
   }
-
   return user;
 };
 
 function restoreAuth() {
     // console.log("RESTORE_AUTH");
-    return function(dispatch) {
-        var user = isLoggedIn();
-        if (user) {
-          dispatch(loginSuccess(null, user));
-          dispatch(getStudentList(user.uid));
-        }
-    };
+  return function(dispatch) {
+    var user = isLoggedIn();
+    if (user) {
+      dispatch(loginSuccess(null, user));
+      dispatch(getStudentList(user.uid));
+    }
+  };
 }
 
-// helper function for ajax calls
-function getCsrfHeader() {
-  return { "x-csrf-token": getCookie("csrf-token") };
+function triggerAddStudent(parentID) {
+  const cleverAuthURL = 'https://reading-challenge.herokuapp.com/addstudent?user=' + parentID;
+  console.log("cleverAuthURL", cleverAuthURL);
+  return {
+    type: Constants.TRIGGER_ADD_STUDENT,
+    cleverAuthURL: cleverAuthURL,
+  };
 }
-
-// ajax call for new student login
-// function _postAddStudent(userID) {
-//   return $.ajax({
-//     url: `/addstudent?user=${userID}`,
-//     dataType: 'jsonp',
-//     contentType: 'text/html',
-//     method: "GET",
-//     headers: { 'Access-Control-Allow-Origin': '*', 'contentType' : 'text/html', 'X-Request': 'JSON'},
-//     crossDomain: true,
-//     // 'X-Request': 'JSON',
-
-//     // xhrFields: {
-//     //   // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-//     //   // This can be used to set the 'withCredentials' property.
-//     //   // Set the value to 'true' if you'd like to pass cookies to the server.
-//     //   // If this is enabled, your server must respond with the header
-//     //   // 'Access-Control-Allow-Credentials: true'.
-//     //   withCredentials: false,
-//     // },
-//     // datatype: 'jsonp',
-//     // 'Accept': 'application/json',
-
-//   });
-// }
-
-
-// ajax call for new student logut
-// function _logoutStudent(query) {
-//   return $.ajax({
-//     url: "/logout",
-//     method: "POST",
-//     // headers: getCsrfHeader(),
-//     headers: { 'Access-Control-Allow-Origin': '*' },
-//     crossDomain: true,
-//     datatype: 'jsonp',
-//     data: query
-//   });
-// }
 
 function addStudent(userID) {
   // uses redux-thunk middleware
@@ -304,9 +207,6 @@ function addStudent(userID) {
 }
 
 function addStudentSuccess() {
-  // console.log("addStudentSuccess: ");
-
-
   return {
     type: Constants.ADD_STUDENT_SUCCESS,
     studentList: {} //load this in the list in
@@ -348,25 +248,30 @@ function getChallengeEndDate(students) {
     } else {
       var districtID;
 
-      for (studentID in students) {
+      for (var studentID in students) {
         districtID = students[studentID].district_id;
         break;
       }
 
-      // all saved dates are in format YYMMDD
-      var ref = db.ref("/challenges/" + districtID).once("value", (snapshot) => {
-        dispatch(setStudentList(students, snapshot.val()));
-      });
+      if (districtID) {
+        // all saved dates are in format YYMMDD
+        var ref = db.ref("/challenges/" + districtID).once("value", (snapshot) => {
+          dispatch(setStudentList(students, snapshot.val()));
+        });        
+      } else {
+        dispatch(setStudentList(students, ""))
+      }
+
 
     }
   };
 }
 
 function setStudentList(students, challenges) {
+  var challengeEndDate = "";
   if (!students) {
     students = {};
   }
-  var challengeEndDate;
   if (challenges) {
     challengeEndDate = challenges.curr_end_date;
   }
@@ -379,14 +284,9 @@ function setStudentList(students, challenges) {
 
 // GET ALL THE DATA FOR STUDENTS
 function getStudentList(parent_id) {
-  // console.log("ACTIONS: getStudentList");
+  console.log("getting all the students!")
   return (dispatch, getState) => {
-    console.log("in get student list");
-    ///////////////////////////////////////////////////////////////////////
-    // temporarily commenting out until firebase fixes bug, see top of file
     var ref = db.ref("/parents/" + parent_id);
-    console.log("ACTIONS: getStudentList. parent:", parent_id);
-    // var ref = new Firebase(firebaseURI + "parents/" + parent_id);
     return ref.child("students").once("value", (snapshot) => {
       dispatch(getChallengeEndDate(snapshot.val()));
     });
@@ -460,6 +360,7 @@ module.exports = {
   getStudentList,
   setStudentTime,
   setStudentBuddy,
+  triggerAddStudent,
   addStudent,
   addStudentFailure,
   addStudentSuccess,
@@ -467,11 +368,9 @@ module.exports = {
   timeFormIsValid,
   loginWithGoogle,
   loginWithPassword,
-  loginWithPasswordNative,
+  setLoading,
   createUser,
-  createUserNative,
   isLoggedIn,
   restoreAuth,
   logout,
-  logoutMobile,
 };
