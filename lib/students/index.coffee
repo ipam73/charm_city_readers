@@ -17,8 +17,8 @@ db = firebase.database()
 Firebase = require('firebase')
 firebaseURI = "https://reading-challenge.firebaseio.com/"
 
-save_student = (student_id, first_name, school_id, school_name, district_id, grade, parent_id) ->
-  console.log "saving right now!"
+save_student = (student_id, first_name, school_id, school_name, district_id, grade, parent_id, buddy) ->
+  console.log "saving right now!", buddy
   student_to_save =
     id: student_id
     name: first_name
@@ -27,10 +27,11 @@ save_student = (student_id, first_name, school_id, school_name, district_id, gra
     district_id: district_id
     grade: grade
     time_log: {}
+    buddy: buddy
 
   ## Downgrading to firebase 2.4, since newsest version does not work w/react
   parentsRef = db.ref("/parents/#{parent_id}")
-  studentsRef = parentsRef.child("students")
+  studentsRef = parentsRef.child("students/#{student_id}")
   # parentsRef = new Firebase(firebaseURI + "parents/" + parent_id)
   # studentsRef = parentsRef.child("students/#{student_id}")
 
