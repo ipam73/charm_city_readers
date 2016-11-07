@@ -7,6 +7,21 @@ import AddTimeForm from "./AddTimeForm";
 import toastr from "toastr";
 import moment from "moment";
 
+const crabIcon = '/images/buddy/crab.png';
+const dogIcon = '/images/buddy/dog.png';
+const flagIcon = '/images/buddy/flag.png';
+const ravenIcon = '/images/buddy/raven.png';
+const sailboatIcon = '/images/buddy/sailboat.png';
+const placeholder = '/images/BuddyPlaceholder.png';
+
+const buddyNameToIcon = {
+  crab: crabIcon,
+  dog: dogIcon,
+  flag: flagIcon,
+  raven: ravenIcon,
+  sailboat: sailboatIcon
+}
+
 class AddTimePage extends React.Component {
   constructor(props) {
     super(props);
@@ -48,6 +63,11 @@ class AddTimePage extends React.Component {
   }
 
   render() {
+    var buddyIcon = placeholder;
+    if (this.props.student && this.props.student.buddy) {
+      buddyIcon = buddyNameToIcon[this.props.student.buddy];
+    }
+
     return (
       <div>
         <h3>{`Log Time: ${this.props.student.name}`}</h3>
@@ -60,6 +80,7 @@ class AddTimePage extends React.Component {
           onSave={this.saveTime}
           onCancel={this.cancelTime}
           errors={this.props.errors}
+          buddy={buddyIcon}
         />
       </div>
     );

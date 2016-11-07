@@ -26,8 +26,8 @@ function SummaryPanel(props) {
             <p> Minutes Read </p>
           </div>
           <div className="content-right">
-            <p className="content-large"> {props.weeksLeft} </p>
-            <p> Weeks Left </p>
+            <p className="content-large"> {props.daysLeft} </p>
+            <p> Days Left </p>
           </div>
         </div>
         <div className="SUMMARYPANEL--panel-footer">
@@ -48,12 +48,12 @@ SummaryPanel.propTypes = {
     grade: React.PropTypes.string.isRequired,
     total_mins: React.PropTypes.number.isRequired,
   }).isRequired,
-  weeksLeft: React.PropTypes.number.isRequired,
+  daysLeft: React.PropTypes.number.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    weeksLeft: state.reducers.weeksLeft,
+    daysLeft: state.reducers.daysLeft,
   };
 }
 

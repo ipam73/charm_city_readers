@@ -25,20 +25,19 @@ module.exports = (
     res.render "parent-homepage", locals
 
   logout_student: (req, res, next) ->
-    console.log "in logout"
     return res.redirect "#{auth_url}/logout"
 
   login_success: (req, res, next) ->
-    console.log "in login success"
     res.render "finish_add_student"
     # return res.redirect "/logout"
 
   add_student: (req, res, next) ->
-    console.log "in add_student here?!"
-
-    console.log req.query.user
     redirect_uri = "#{redirect_base_uri}/authorize_student"
     state = crypto.createCipher('aes-256-ctr', session_secret).update(req.sessionID + "|" + req.query.user, 'utf8', 'hex')
+    if req.query.mobile
+      state = crypto.createCipher('aes-256-ctr', session_secret).update(req.sessionID + "|" + req.query.user + "|mobile", 'utf8', 'hex')
+
+
     params =
       response_type: 'code'
       redirect_uri: redirect_uri
@@ -48,7 +47,6 @@ module.exports = (
       channel: 'reading_challenge_app'
       skip: 1
       state: state
-    console.log "about to redirect"
     # res.sendStatus(200)
 
     return res.redirect "#{auth_url}/authorize?#{qs.stringify params}"
@@ -63,6 +61,12 @@ module.exports = (
     state = crypto.createDecipher('aes-256-ctr', session_secret).update(req.query.state, 'hex', 'utf8').split('|')
     return res.redirect "/addstudent" if state[0] isnt req.sessionID
     parent_id = state[1]
+
+    isMobile = false
+    if state.length >= 3
+      if state[2] is 'mobile'
+        isMobile = true
+        console.log "it is mobile!"
 
     console.log "in authorize_student next"
 
@@ -83,7 +87,6 @@ module.exports = (
           cb_a null, body.access_token
 
       user_info: ['token'].concat (cb_a, {token}) ->
-        console.log "user_info"
         helpers_lib.get_clever_resource(api_url) "/me", token, cb_a
 
       user: ['user_info', 'token'].concat (cb_a, {user_info, token}) ->
@@ -104,7 +107,6 @@ module.exports = (
         cb_a null, {name: ""}
 
     , (err, results) ->
-      console.log "got here at the end"
       # console.log "results are, ", results
 
       return next err if err?
@@ -115,6 +117,9 @@ module.exports = (
         console.log "houston we have a problem!"
         return res.redirect "/" #eventually show error
 
+      buddy_arrary = ["crab", "dog", "flag", "raven", "sailboat"]
+      rand_buddy = buddy_arrary[Math.floor(Math.random() * buddy_arrary.length)]
+
       student =
         id: results.user.id
         first_name: results.user.name.first
@@ -122,13 +127,18 @@ module.exports = (
         grade: results.user.grade
         school_id: results.user.school
         school_name: results.school_info.name
+        buddy: rand_buddy
 
       req.session.student_logged_in = true
       req.session.access_token = results.token
 
-      err = students_lib.save_student student.id, student.first_name, student.school_id, student.school_name, student.district_id, student.grade, parent_id
+      err = students_lib.save_student student.id, student.first_name, student.school_id, student.school_name, student.district_id, student.grade, parent_id, student.buddy
       # do something if error
       # res.send(200)
-      res.redirect "/"
+
+      redirect_url = "/"
+      if isMobile
+        redirect_url = 'charm-city-readers://homepage'
+      res.redirect redirect_url
       # res.redirect "/login_success"
       # res.redirect "/logout"

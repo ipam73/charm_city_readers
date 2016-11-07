@@ -20,7 +20,7 @@ var AddTimeForm = React.createClass({
         <div className="panel application-panel container-fluid container">
           <div className="TIMEFORM--panel-default">
             <div className="TIMEFORM--panel-body">
-              <img src="/images/BuddyPlaceholder.png" alt="Icon"></img>
+              <img src={this.props.buddy} alt="Icon"></img>
               <div className="content">
                 <p>Date</p>
                 <DatePicker
