@@ -1,6 +1,7 @@
 import React from "react";
 import AddTimeButton from "../time/AddTimeButton";
 require("!style!css!less!./SummaryPanel.less");
+import BuddyButton from '../buddy/BuddyButton';
 
 // redux stuff
 import {connect} from "react-redux";
@@ -10,7 +11,9 @@ function SummaryPanel(props) {
     <div className="panel application-panel container-fluid">
       <div className="SUMMARYPANEL--panel-default">
         <div className="SUMMARYPANEL--panel-heading">
-          <img src="/images/BuddyPlaceholder.png" alt="Icon"></img>
+          <BuddyButton
+            studentID={props.student.id}
+          />
           <div className="SUMMARYPANEL--heading-text">
             <h1 className="SUMMARYPANEL--panel-title">{props.student.name}</h1>
             <p> {props.student.school_name} </p>

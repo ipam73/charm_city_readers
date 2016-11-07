@@ -11,6 +11,7 @@ import About from './components/About';
 import Support from './components/Support';
 import Welcome from './components/Welcome';
 import AddTimePage from './components/time/AddTimePage';
+import SelectBuddy from './components/buddy/SelectBuddy';
 
 var routes = (
   <Route path="/" component={App}>
@@ -21,6 +22,7 @@ var routes = (
     <Route path="/about" component={About} />
     <Route path="/support" component={Support} />
     <Route path="/welcome" component={Welcome} />
+    <Route path="/selectbuddy/:id" component={SelectBuddy} />
   </Route>
 );
 
