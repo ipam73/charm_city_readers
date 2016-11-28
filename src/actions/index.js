@@ -2,15 +2,18 @@ var Constants = require('../constants');
 var _ = require("underscore");
 var moment = require("moment");
 var { push, replace } = require("react-router-redux")
+var config = require("../../web/config")
 
 // Initialize Firebase
 import * as firebase from 'firebase';
 const firebaseConfig = {
   apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
-    authDomain: "reading-challenge.firebaseapp.com",
-    databaseURL: "https://reading-challenge.firebaseio.com",
-    storageBucket: "firebase-reading-challenge.appspot.com",
+  authDomain: "reading-challenge.firebaseapp.com",
+  databaseURL: "https://reading-challenge.firebaseio.com",
+  storageBucket: "firebase-reading-challenge.appspot.com",
+  messagingSenderId: "210256304232"
 };
+
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
 var db = firebase.database();

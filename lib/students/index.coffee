@@ -8,6 +8,7 @@ firebaseConfig =
   authDomain: "reading-challenge.firebaseapp.com"
   databaseURL: "https://reading-challenge.firebaseio.com"
   storageBucket: "firebase-reading-challenge.appspot.com"
+  messagingSenderId: "210256304232"
 
 firebaseApp = firebase.initializeApp(firebaseConfig)
 firebaseRef = firebaseApp.database().ref()
