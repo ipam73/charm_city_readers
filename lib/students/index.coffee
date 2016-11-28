@@ -1,5 +1,4 @@
 _ = require "underscore"
-config = require "#{__dirname}/../../web/config"
 
 firebase = require('firebase')
 

@@ -2,7 +2,6 @@ var Constants = require('../constants');
 var _ = require("underscore");
 var moment = require("moment");
 var { push, replace } = require("react-router-redux")
-var config = require("../../web/config")
 
 // Initialize Firebase
 import * as firebase from 'firebase';
