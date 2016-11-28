@@ -24,7 +24,7 @@ module.exports = () ->
   redirect_base_uri = "http://#{config.HOST}:#{config.PORT}"
   redirect_base_uri = "https://#{config.HOST}" if config.ENV is "production"
 
-  main_parent_routes = require("../src/web/routes") students_lib, helpers_lib, config.CLIENT_ID, config.CLIENT_SECRET, redirect_base_uri, config.SESSION_SECRET, config.AUTH_URL, config.API_URL
+  main_parent_routes = require("../src/web/routes") students_lib, helpers_lib, config.CLIENT_ID, config.CLIENT_SECRET, redirect_base_uri, config.SESSION_SECRET, config.AUTH_URL, config.API_URL, config.DISTRICT_ID
 
   app.use express.static(__dirname + '/public')
 
