@@ -20,7 +20,7 @@ googleProvider.addScope('email');
 
 
 function authFailure(err) {
-  console.log("authFailure:", err);
+  // console.log("authFailure:", err);
   return {
     type: Constants.LOGIN_FAILURE,
     error: err,
@@ -79,7 +79,7 @@ function setLoading() {
 }
 
 function loginWithPassword(email, password, isWebApp) {
-  console.log("trying to log in w/password");
+  // console.log("trying to log in w/password");
   return function(dispatch) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
 
@@ -122,7 +122,7 @@ function createUserFailure(err) {
 }
 
 function createUser(email, password, isWebApp) {
-  console.log("trying to create a new user: ");
+  // console.log("trying to create a new user: ");
   return function(dispatch) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result) {
       dispatch(loginWithPassword(email, password, isWebApp));
@@ -147,9 +147,8 @@ function logout(isWebApp) {
 }
 
 function loginSuccess(token, user) {
-  console.log("*** in login success", user);
+  // console.log("*** in login success", user);
   // TODO: ensure that firebase ref for this user exists
-  // console.log("go to / on loginSuccess");
   return {
     type: Constants.LOGIN_SUCCESS,
     user: user,
@@ -167,7 +166,7 @@ function logoutSuccess() {
 function isLoggedIn() {
   var firebaseUser = firebase.auth().currentUser;
   var user = null;
-  console.log("firebase user is: ", firebaseUser);
+  // console.log("firebase user is: ", firebaseUser);
   if (firebaseUser != null) {
     // hack for displayName to exist
     var user = {};
@@ -256,7 +255,7 @@ function addStudentFailure() {
 }
 
 function getChallengeEndDate(students) {
-  console.log("in here: getChallengeEndDate");
+  // console.log("in here: getChallengeEndDate");
   return (dispatch, getState) => {
     if (!students) {
       students = {};
@@ -353,7 +352,6 @@ function setStudentTime(readDate, readTime, studentID, parentID) {
 }
 
 function setStudentBuddy(buddyName, studentID, parentID) {
-  console.log("in set student budy", buddyName, studentID, parentID);
   var parentsRef = db.ref("/parents/" + parentID);
   var studentsBuddyRef = parentsRef.child("students/" + studentID);
   studentsBuddyRef.update({"buddy": buddyName});

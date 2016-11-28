@@ -7,6 +7,7 @@ import actions from "../../actions";
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
+    props.getStudentList(props.parentID);
   }
 
   render() {
@@ -26,7 +27,12 @@ Homepage.propTypes = {
 
 // sets current state to summary page as this.prop
 function mapStateToProps(state) {
+  var parentID = '';
+  if (state.reducers.user) {
+    parentID = state.reducers.user.uid;
+  }
   return {
+    parentID,
     students: state.reducers.studentList,
     user: state.reducers.user,
   };
@@ -34,7 +40,11 @@ function mapStateToProps(state) {
 
 // currently not used for anything, no actions triggered on this page
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    getStudentList: (parentID) => {
+      dispatch(actions.getStudentList(parentID));
+    },
+  };
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Homepage);

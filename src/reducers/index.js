@@ -92,7 +92,6 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.LOGIN_SUCCESS:
-      console.log("in login success user is: ", action.user);
       newstate.user = {
         displayName: action.user.displayName,
         uid: action.user.uid,
@@ -102,7 +101,6 @@ function rootReducer(state, action) {
       return newstate;
 
     case Constants.LOGIN_FAILURE:
-      // console.log("in login failure");
       newstate.errorMessage = "Sign in failed, please try again with another username and/or password.";
       newstate.user = null;
       newstate.isLoading = false;
@@ -111,7 +109,6 @@ function rootReducer(state, action) {
 
     case Constants.LOGOUT_SUCCESS:
       // reset everything to initial state
-      console.log("logout success");
       return _.clone(initialState);
 
     case Constants.CREATE_USER_FAILURE:

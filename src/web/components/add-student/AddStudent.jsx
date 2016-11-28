@@ -8,17 +8,11 @@ require("!style!css!less!./AddStudent.less");
 class AddStudent extends React.Component {
   constructor(props) {
     super(props);
-    console.log("USER:", this.props.user);
     this.onClickFn = this.onClickFn.bind(this);
   }
 
   onClickFn() {
-    // this.props.addStudent(this.props.user.uid);
     window.location = "/addstudent?user=" + this.props.user.uid;
-    // var wnd = window.open(`/addstudent?user=${this.props.user.uid}`);
-    // setTimeout(function() {
-    //   wnd.close();
-    // }, 5000);
   }
 
   render() {
