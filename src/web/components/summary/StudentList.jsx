@@ -7,7 +7,6 @@ function StudentList(props) {
       <div>
         {Object.keys(props.students).map(
           (student_id, i) => {
-            console.log(student_id, i);
             return (
               <SummaryPanel
                 key={student_id}

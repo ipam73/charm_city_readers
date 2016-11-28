@@ -19,7 +19,6 @@ class SelectBuddy extends React.Component {
   }
 
   onBuddyPress(buddyName) {
-    console.log("selecting buddy")
     this.props.setStudentBuddy(buddyName, this.props.studentID, this.props.parentID);
     hashHistory.push("/");
   }
