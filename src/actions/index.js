@@ -6,7 +6,12 @@ var config = require("../../web/config")
 
 // Initialize Firebase
 import * as firebase from 'firebase';
-const firebaseConfig = config.FIREBASE_CONFIG;
+const firebaseConfig = {
+  apiKey: config.FIREBASE_CONFIG.apiKey,
+  authDomain: config.FIREBASE_CONFIG.authDomain,
+  databaseURL: config.FIREBASE_CONFIG.databaseURL,
+  storageBucket: config.FIREBASE_CONFIG.storageBucket,
+};
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
 var db = firebase.database();

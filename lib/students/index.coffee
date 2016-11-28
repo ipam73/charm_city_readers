@@ -3,7 +3,12 @@ config = require "#{__dirname}/../../web/config"
 
 firebase = require('firebase')
 
-firebaseConfig = config.FIREBASE_CONFIG
+firebaseConfig =
+  apiKey: config.FIREBASE_CONFIG.apiKey
+  authDomain: config.FIREBASE_CONFIG.authDomain
+  databaseURL: config.FIREBASE_CONFIG.databaseURL
+  storageBucket: config.FIREBASE_CONFIG.storageBucket
+
 firebaseApp = firebase.initializeApp(firebaseConfig)
 firebaseRef = firebaseApp.database().ref()
 db = firebase.database()
