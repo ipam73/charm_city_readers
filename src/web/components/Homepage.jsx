@@ -7,7 +7,6 @@ import actions from "../../actions";
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
-    props.restoreAuth();
   }
 
   render() {
@@ -35,11 +34,7 @@ function mapStateToProps(state) {
 
 // currently not used for anything, no actions triggered on this page
 function mapDispatchToProps(dispatch) {
-  return {
-    restoreAuth: () => {
-      dispatch(actions.restoreAuth());
-    },
-  };
+  return {};
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Homepage);

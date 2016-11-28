@@ -111,7 +111,6 @@ function rootReducer(state, action) {
 
     case Constants.LOGOUT_SUCCESS:
       // reset everything to initial state
-      // newstate.user = null;
       console.log("logout success");
       return _.clone(initialState);
 
