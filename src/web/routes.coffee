@@ -12,7 +12,8 @@ module.exports = (
   redirect_base_uri,
   session_secret,
   auth_url,
-  api_url
+  api_url,
+  district_id
   ) ->
   homepage: (req, res, next) ->
     locals =
@@ -42,8 +43,7 @@ module.exports = (
       response_type: 'code'
       redirect_uri: redirect_uri
       client_id: client_id
-      district_id: "54c6778015ec3d010000001b" # baltimore
-      # district_id: "56ae8e9c5994560100000ae4" # test district
+      district_id: district_id
       channel: 'reading_challenge_app'
       skip: 1
       state: state
