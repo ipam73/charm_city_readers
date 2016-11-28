@@ -30,7 +30,7 @@ function logGoogleAnalytics() {
 
 // store, takes reducer, thunk middleware
 var store = (window.devToolsExtension ? window.devToolsExtension()(createStore) : createStore)(reducer, applyMiddleware(thunk, routerMiddleware(hashHistory)));
-store.dispatch(actions.restoreAuth());
+
 ReactDOM.render((
   <Provider store={store}>
     <div>
@@ -41,3 +41,8 @@ ReactDOM.render((
   </Provider>
 
 ), document.getElementById('parent-home'));
+
+setTimeout(function(){
+  store.dispatch( actions.startListeningToAuth(true) );
+});
+

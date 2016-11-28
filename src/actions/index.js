@@ -1,7 +1,7 @@
 var Constants = require('../constants');
 var _ = require("underscore");
 var moment = require("moment");
-var { push } = require("react-router-redux")
+var { push, replace } = require("react-router-redux")
 
 // Initialize Firebase
 import * as firebase from 'firebase';
@@ -27,31 +27,46 @@ function authFailure(err) {
   };
 }
 
+function startListeningToAuth(isWebApp){
+  return function(dispatch){
+    firebase.auth().onAuthStateChanged(function(user){
+      if (user){
+        var userResponse = {};
+        if (user.displayName) {
+          userResponse.displayName = user.displayName;
+        } else {
+          userResponse.displayName = user.email;
+        }
+        userResponse.uid = user.uid;
+
+        dispatch(loginSuccess(null, userResponse));
+        dispatch(getStudentList(user.uid));
+        if (isWebApp) {
+          dispatch(push("/"));
+        }
+      } else {
+        dispatch(logout(isWebApp));
+      }
+    });
+  }
+};
+
 // action to login to Google via a popup. Dispatch error or user
 function loginWithGoogle(isWebApp) {
   return function(dispatch) {
-// Using a popup.
+    // Using a popup.
     firebase.auth().signInWithPopup(googleProvider).then(function(result) {
- 
       // This gives you a Google Access Token.
       var token = result.credential.accessToken;
       // The signed-in user info.
       var user = result.user;
-      // var token = result.token; // empty in current scope
-      // var user = result.google;
-      // user.uid = result.uid;
-      console.log("logged in with google!!!");
       dispatch(loginSuccess(token, user));
-
-      // console.log("dispatching to push /about")
       dispatch(getStudentList(user.uid));
-
       if (isWebApp) {
         dispatch(push("/"));        
       }
 
     }).catch(function(err) {
-      // console.log("error logging in with google", err);
       dispatch(authFailure(err));
     });
   };
@@ -119,13 +134,12 @@ function createUser(email, password, isWebApp) {
 }
 
 function logout(isWebApp) {
-
   return function(dispatch) {
+    if (isWebApp) {
+      dispatch(replace("/login"));
+    }
     firebase.auth().signOut().then(() => {
       dispatch(logoutSuccess());
-      if (isWebApp) {
-        dispatch(push("/login"));
-      }
     }, (err) => {
       dispatch(authFailure(err));
     });
@@ -167,16 +181,18 @@ function isLoggedIn() {
   return user;
 };
 
-function restoreAuth() {
-    // console.log("RESTORE_AUTH");
-  return function(dispatch) {
-    var user = isLoggedIn();
-    if (user) {
-      dispatch(loginSuccess(null, user));
-      dispatch(getStudentList(user.uid));
-    }
-  };
-}
+// function restoreAuth() {
+//   console.log("RESTORE_AUTH");
+//   return function(dispatch) {
+//     var user = isLoggedIn();
+//     if (user) {
+//       console.log("have user here");
+//       console.log(user);
+//       dispatch(loginSuccess(null, user));
+//       dispatch(getStudentList(user.uid));
+//     }
+//   };
+// }
 
 function triggerAddStudent(parentID) {
   const cleverAuthURL = 'https://reading-challenge.herokuapp.com/addstudent?user=' + parentID;
@@ -371,6 +387,6 @@ module.exports = {
   setLoading,
   createUser,
   isLoggedIn,
-  restoreAuth,
   logout,
+  startListeningToAuth,
 };
