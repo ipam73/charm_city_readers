@@ -3,10 +3,16 @@ config = require "#{__dirname}/../../web/config"
 
 firebase = require('firebase')
 
-firebaseConfig = config.FIREBASE_CONFIG
+firebaseConfig =
+  apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw"
+  authDomain: "reading-challenge.firebaseapp.com"
+  databaseURL: "https://reading-challenge.firebaseio.com"
+  storageBucket: "firebase-reading-challenge.appspot.com"
+
 firebaseApp = firebase.initializeApp(firebaseConfig)
 firebaseRef = firebaseApp.database().ref()
 db = firebase.database()
+
 
 Firebase = require('firebase')
 firebaseURI = "https://reading-challenge.firebaseio.com/"
