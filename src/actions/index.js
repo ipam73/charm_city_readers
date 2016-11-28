@@ -7,11 +7,12 @@ var config = require("../../web/config")
 // Initialize Firebase
 import * as firebase from 'firebase';
 const firebaseConfig = {
-  apiKey: config.FIREBASE_CONFIG.apiKey,
-  authDomain: config.FIREBASE_CONFIG.authDomain,
-  databaseURL: config.FIREBASE_CONFIG.databaseURL,
-  storageBucket: config.FIREBASE_CONFIG.storageBucket,
+  apiKey: "AIzaSyCAAUrjrCNH_xCigW0T9qZxqeuaUpfcKmw",
+  authDomain: "reading-challenge.firebaseapp.com",
+  databaseURL: "https://reading-challenge.firebaseio.com",
+  storageBucket: "firebase-reading-challenge.appspot.com",
 };
+
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var firebaseRef = firebaseApp.database().ref();
 var db = firebase.database();
