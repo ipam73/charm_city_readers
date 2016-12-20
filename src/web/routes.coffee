@@ -40,6 +40,7 @@ module.exports = (
 
 
     params =
+      confirmed: false
       response_type: 'code'
       redirect_uri: redirect_uri
       client_id: client_id
